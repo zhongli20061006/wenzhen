@@ -10,7 +10,10 @@
             <el-menu-item index="/admin/rules">规则</el-menu-item>
             <el-menu-item index="/admin/statistics">统计</el-menu-item>
           </el-menu>
-          <el-button text @click="logout">退出</el-button>
+          <div>
+            <el-button text @click="$router.push('/profile')">个人中心</el-button>
+            <el-button text @click="logout">退出</el-button>
+          </div>
         </div>
       </el-header>
       <el-main>

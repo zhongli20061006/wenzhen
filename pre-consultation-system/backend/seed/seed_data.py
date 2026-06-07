@@ -8,6 +8,7 @@ import os
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
+import bcrypt
 from app.database import SessionLocal, engine, Base
 from app.models.department import Department
 from app.models.disease import Disease
@@ -15,6 +16,7 @@ from app.models.symptom_dict import SymptomDict, SymptomLevel
 from app.models.symptom_disease import SymptomDisease
 from app.models.differential_rule import DifferentialRule
 from app.models.doctor import Doctor
+from app.models.user import User
 
 Base.metadata.create_all(bind=engine)
 
@@ -427,6 +429,10 @@ def seed():
         ("口腔科", "罗平", "主治医师", "牙体牙髓病"),
         ("内分泌科", "谢芳", "主任医师", "糖尿病、甲状腺疾病"),
         ("内分泌科", "唐敏", "副主任医师", "内分泌代谢疾病"),
+        ("妇产科", "李芳华", "主任医师", "妇产科疾病专家"),
+        ("儿科", "王小明", "副主任医师", "儿科疾病诊治"),
+        ("急诊科", "赵大勇", "主任医师", "急危重症救治"),
+        ("全科医学科", "孙丽华", "主治医师", "全科医学综合诊疗"),
     ]
     for dep_name, name, title, intro in doctor_list:
         doctor = Doctor(name=name, title=title, department_id=depts[dep_name], introduction=intro)
@@ -439,5 +445,59 @@ def seed():
     print("种子数据初始化完成！")
 
 
+def seed_users():
+    db = SessionLocal()
+
+    existing = db.query(User).filter(User.username == "admin").first()
+    if existing:
+        print("用户账号已存在，跳过")
+        db.close()
+        return
+
+    doctors = db.query(Doctor).all()
+    doctor_map = {}
+    for d in doctors:
+        dep_name = d.department.name
+        if dep_name not in doctor_map:
+            doctor_map[dep_name] = d.id
+
+    doctor_accounts = [
+        ("呼吸内科", "doctor_respiratory"),
+        ("消化内科", "doctor_digestive"),
+        ("心血管内科", "doctor_cardio"),
+        ("神经内科", "doctor_neuro"),
+        ("内分泌科", "doctor_endocrine"),
+        ("骨科", "doctor_ortho"),
+        ("皮肤科", "doctor_derm"),
+        ("眼科", "doctor_eye"),
+        ("耳鼻喉科", "doctor_ent"),
+        ("口腔科", "doctor_oral"),
+        ("妇产科", "doctor_obgyn"),
+        ("儿科", "doctor_ped"),
+        ("急诊科", "doctor_emergency"),
+        ("全科医学科", "doctor_general"),
+    ]
+
+    users = [
+        ("admin", "admin123", "admin", None),
+        ("patient1", "patient123", "patient", None),
+    ]
+
+    for dep_name, username in doctor_accounts:
+        did = doctor_map.get(dep_name)
+        if did:
+            pwd = username.split("_")[1][:4] + "123"
+            users.append((username, pwd, "doctor", did))
+
+    for username, pwd, role, doctor_id in users:
+        hashed = bcrypt.hashpw(pwd.encode(), bcrypt.gensalt()).decode()
+        db.add(User(username=username, password=hashed, role=role, doctor_id=doctor_id))
+
+    db.commit()
+    db.close()
+    print(f"用户账号: {len(users)} 个已创建")
+
+
 if __name__ == "__main__":
     seed()
+    seed_users()

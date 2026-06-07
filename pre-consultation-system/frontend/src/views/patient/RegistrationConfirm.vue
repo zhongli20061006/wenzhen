@@ -55,12 +55,12 @@ const form = reactive({
 
 onMounted(async () => {
   if (form.department_name) {
-    const depts = await api.get('/admin/departments')
+    const depts = await api.get('/consultation/departments')
     const dep = depts.find(d => d.name === form.department_name)
     if (dep) {
       form.department_id = dep.id
-      const res = await api.get(`/admin/departments`) // get doctors differently
-      // fallback: show all doctors and filter by department name
+      const res = await api.get('/consultation/doctors', { params: { department_id: dep.id } })
+      doctors.value = res
     }
   }
 })

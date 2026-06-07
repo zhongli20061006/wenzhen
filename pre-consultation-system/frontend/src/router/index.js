@@ -2,13 +2,14 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import { useUserStore } from '../stores/user'
 
 const routes = [
-  { path: '/', redirect: '/consultation' },
+  { path: '/', redirect: '/login' },
   { path: '/login', name: 'Login', component: () => import('../views/auth/Login.vue') },
 
   { path: '/consultation', name: 'Consultation', component: () => import('../views/patient/Consultation.vue') },
   { path: '/consultation/:id/result', name: 'Result', component: () => import('../views/patient/Result.vue') },
   { path: '/registration/confirm', name: 'RegistrationConfirm', component: () => import('../views/patient/RegistrationConfirm.vue') },
   { path: '/registration/my', name: 'MyRegistrations', component: () => import('../views/patient/MyRegistrations.vue') },
+  { path: '/profile', name: 'Profile', component: () => import('../views/Profile.vue') },
 
   { path: '/doctor/today', name: 'TodayPatients', component: () => import('../views/doctor/TodayPatients.vue'), meta: { role: 'doctor' } },
   { path: '/doctor/patient/:id', name: 'PatientReport', component: () => import('../views/doctor/PatientReport.vue'), meta: { role: 'doctor' } },
@@ -26,7 +27,11 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const store = useUserStore()
-  if (to.meta.role && store.role !== to.meta.role) {
+  if (to.path === '/login') {
+    next()
+  } else if (to.meta.role && store.role !== to.meta.role) {
+    next('/login')
+  } else if (!store.isLoggedIn) {
     next('/login')
   } else {
     next()

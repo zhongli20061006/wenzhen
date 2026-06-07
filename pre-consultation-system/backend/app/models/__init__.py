@@ -8,6 +8,7 @@ from app.models.question_record import QuestionRecord
 from app.models.doctor import Doctor
 from app.models.registration import Registration
 from app.models.diagnosis_feedback import DiagnosisFeedback
+from app.models.user import User
 
 __all__ = [
     "SymptomDict",
@@ -20,4 +21,5 @@ __all__ = [
     "Doctor",
     "Registration",
     "DiagnosisFeedback",
+    "User",
 ]

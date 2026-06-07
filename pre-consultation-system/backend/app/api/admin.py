@@ -5,6 +5,7 @@ from sqlalchemy import func
 
 from app.database import get_db
 from app.api.auth import get_current_user, require_role
+from app.logger import logger
 from app.schemas.admin import (
     SymptomCreate,
     DiseaseCreate,
@@ -33,6 +34,7 @@ def create_symptom(req: SymptomCreate, db: Session = Depends(get_db)):
     existing = db.query(SymptomDict).filter(SymptomDict.name == req.name).first()
     if existing:
         raise HTTPException(status_code=400, detail="症状已存在")
+    logger.info("创建症状: name=%s, category=%s", req.name, req.category)
     sym = SymptomDict(name=req.name, aliases=req.aliases, category=req.category, level=req.level)
     db.add(sym)
     db.commit()
@@ -44,6 +46,7 @@ def update_symptom(symptom_id: int, req: SymptomCreate, db: Session = Depends(ge
     sym = db.query(SymptomDict).filter(SymptomDict.id == symptom_id).first()
     if not sym:
         raise HTTPException(status_code=404, detail="症状不存在")
+    logger.info("更新症状 id=%d: %s -> %s", symptom_id, sym.name, req.name)
     sym.name = req.name
     sym.aliases = req.aliases
     sym.category = req.category
@@ -57,6 +60,7 @@ def delete_symptom(symptom_id: int, db: Session = Depends(get_db)):
     sym = db.query(SymptomDict).filter(SymptomDict.id == symptom_id).first()
     if not sym:
         raise HTTPException(status_code=404, detail="症状不存在")
+    logger.warning("删除症状 id=%d, name=%s", symptom_id, sym.name)
     db.delete(sym)
     db.commit()
     return {"message": "删除成功"}
@@ -72,6 +76,7 @@ def create_disease(req: DiseaseCreate, db: Session = Depends(get_db)):
     existing = db.query(Disease).filter(Disease.name == req.name).first()
     if existing:
         raise HTTPException(status_code=400, detail="疾病已存在")
+    logger.info("创建疾病: name=%s, urgency=%s", req.name, req.urgency)
     dis = Disease(
         name=req.name, icd_code=req.icd_code, description=req.description,
         urgency=req.urgency, department_id=req.department_id,
@@ -86,6 +91,7 @@ def update_disease(disease_id: int, req: DiseaseCreate, db: Session = Depends(ge
     dis = db.query(Disease).filter(Disease.id == disease_id).first()
     if not dis:
         raise HTTPException(status_code=404, detail="疾病不存在")
+    logger.info("更新疾病 id=%d: %s -> %s", disease_id, dis.name, req.name)
     dis.name = req.name
     dis.icd_code = req.icd_code
     dis.description = req.description
@@ -100,6 +106,7 @@ def delete_disease(disease_id: int, db: Session = Depends(get_db)):
     dis = db.query(Disease).filter(Disease.id == disease_id).first()
     if not dis:
         raise HTTPException(status_code=404, detail="疾病不存在")
+    logger.warning("删除疾病 id=%d, name=%s", disease_id, dis.name)
     db.delete(dis)
     db.commit()
     return {"message": "删除成功"}
@@ -115,6 +122,7 @@ def create_department(req: DepartmentCreate, db: Session = Depends(get_db)):
     existing = db.query(Department).filter(Department.name == req.name).first()
     if existing:
         raise HTTPException(status_code=400, detail="科室已存在")
+    logger.info("创建科室: name=%s", req.name)
     dep = Department(name=req.name, parent_id=req.parent_id, description=req.description)
     db.add(dep)
     db.commit()
@@ -126,6 +134,7 @@ def update_department(department_id: int, req: DepartmentCreate, db: Session = D
     dep = db.query(Department).filter(Department.id == department_id).first()
     if not dep:
         raise HTTPException(status_code=404, detail="科室不存在")
+    logger.info("更新科室 id=%d: %s -> %s", department_id, dep.name, req.name)
     dep.name = req.name
     dep.parent_id = req.parent_id
     dep.description = req.description
@@ -138,6 +147,7 @@ def delete_department(department_id: int, db: Session = Depends(get_db)):
     dep = db.query(Department).filter(Department.id == department_id).first()
     if not dep:
         raise HTTPException(status_code=404, detail="科室不存在")
+    logger.warning("删除科室 id=%d, name=%s", department_id, dep.name)
     db.delete(dep)
     db.commit()
     return {"message": "删除成功"}
@@ -156,6 +166,7 @@ def create_symptom_disease(req: SymptomDiseaseCreate, db: Session = Depends(get_
     ).first()
     if existing:
         raise HTTPException(status_code=400, detail="关联已存在")
+    logger.info("创建症状-疾病关联: symptom_id=%d, disease_id=%d, weight=%.2f", req.symptom_id, req.disease_id, req.weight)
     sd = SymptomDisease(
         symptom_id=req.symptom_id, disease_id=req.disease_id,
         weight=req.weight, is_required=req.is_required,
@@ -170,6 +181,7 @@ def delete_symptom_disease(sd_id: int, db: Session = Depends(get_db)):
     sd = db.query(SymptomDisease).filter(SymptomDisease.id == sd_id).first()
     if not sd:
         raise HTTPException(status_code=404, detail="关联不存在")
+    logger.warning("删除症状-疾病关联 id=%d", sd_id)
     db.delete(sd)
     db.commit()
     return {"message": "删除成功"}

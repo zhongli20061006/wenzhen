@@ -1,0 +1,6 @@
+患者：patient1 / patient123
+医生：doctor1 / doctor123
+管理员：admin / admin123
+# 根目录 D:\DjangoProject\问诊系统
+python start.py backend
+python start.py frontend   # 另一个终端

@@ -4,7 +4,10 @@
       <template #header>
         <div class="chat-header">
           <span>智能预问诊</span>
-          <el-button text @click="resetChat">重新开始</el-button>
+          <div>
+            <el-button text @click="$router.push('/profile')">个人中心</el-button>
+            <el-button text @click="resetChat">重新开始</el-button>
+          </div>
         </div>
       </template>
 

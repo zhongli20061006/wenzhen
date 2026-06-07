@@ -4,7 +4,10 @@
       <el-header>
         <div class="header-bar">
           <span>医生接诊工作台</span>
-          <el-button text @click="logout">退出登录</el-button>
+          <div>
+            <el-button text @click="$router.push('/profile')">个人中心</el-button>
+            <el-button text @click="logout">退出登录</el-button>
+          </div>
         </div>
       </el-header>
       <el-main>
@@ -55,7 +58,7 @@ const timeSlot = ref('')
 async function load() {
   loading.value = true
   try {
-    const params = { status: '等待中' }
+    const params = {}
     if (timeSlot.value) params.time_slot = timeSlot.value
     patients.value = await api.get('/doctor/today-patients', { params })
   } finally {

@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.config import settings
 from app.api.auth import get_current_user
+from app.logger import logger
 from app.schemas.consultation import (
     StartConsultationRequest,
     AnswerRequest,
@@ -19,6 +20,8 @@ from app.models.registration import Registration, TimeSlot, RegistrationStatus
 from app.models.department import Department
 from app.models.doctor import Doctor
 from app.models.symptom_dict import SymptomDict
+from app.models.doctor import Doctor
+from app.models.department import Department
 from app.services.symptom_standardizer import standardize_symptoms
 from app.services.reasoning_engine import (
     calculate_disease_scores,
@@ -46,7 +49,9 @@ def start_consultation(req: StartConsultationRequest, current_user: dict = Depen
             symptom_matches.extend(matches)
 
     symptom_names = list({m["symptom_name"] for m in symptom_matches})
+    logger.info("开始问诊 session=%s, patient=%s, 初始症状=%s", session_id, current_user["username"], symptom_names)
     if not symptom_names:
+        logger.warning("问诊启动失败: 未识别到有效症状, patient=%s", current_user["username"])
         raise HTTPException(status_code=400, detail="未能识别任何有效症状")
 
     collected_data = {
@@ -112,6 +117,7 @@ def start_consultation(req: StartConsultationRequest, current_user: dict = Depen
     session.final_recommendation = result
     db.commit()
 
+    logger.info("问诊直接出推荐结果 session=%s, 候选疾病数=%d", session_id, len(candidates))
     return {
         "consultation_id": session_id,
         "message": "直接生成推荐",
@@ -141,6 +147,7 @@ def answer_question(consultation_id: str, req: AnswerRequest, db: Session = Depe
     if record.answer is not None:
         raise HTTPException(status_code=400, detail="该问题已经回答过")
 
+    logger.info("回答问诊 session=%s, round=%d, symptom_id=%d, answer=%s", consultation_id, current_round, req.symptom_id, req.answer)
     record.answer = AnswerType(req.answer)
     collected = dict(session.collected_data)
     symptoms = dict(collected.get("symptoms", {}))
@@ -177,6 +184,7 @@ def answer_question(consultation_id: str, req: AnswerRequest, db: Session = Depe
         result = generate_recommendation(candidates, collected)
         session.final_recommendation = result
         db.commit()
+        logger.info("问诊结束(达到停止条件) session=%s, 候选疾病数=%d", consultation_id, top_count)
         return {
             "status": "RECOMMENDING",
             "result": result,
@@ -192,6 +200,7 @@ def answer_question(consultation_id: str, req: AnswerRequest, db: Session = Depe
         result = generate_recommendation(candidates, collected)
         session.final_recommendation = result
         db.commit()
+        logger.info("问诊结束(无更多追问) session=%s", consultation_id)
         return {
             "status": "RECOMMENDING",
             "result": result,
@@ -209,6 +218,7 @@ def answer_question(consultation_id: str, req: AnswerRequest, db: Session = Depe
     db.add(new_record)
     db.commit()
 
+    logger.info("追问下一轮 session=%s, round=%d, symptom=%s", consultation_id, session.current_round, next_symptom["symptom_name"])
     return {
         "status": "QUESTIONING",
         "question_id": new_record.id,
@@ -260,6 +270,7 @@ def create_registration(req: RegistrationRequest, db: Session = Depends(get_db))
     if req.time_slot not in ("上午", "下午", "晚上"):
         raise HTTPException(status_code=400, detail="时段必须是上午/下午/晚上")
 
+    logger.info("挂号成功 session=%s, patient=%s, dept=%s, doctor=%s, date=%s", req.consultation_id, session.patient_id, dep.name, doctor.name, req.registration_date)
     registration = Registration(
         patient_id=session.patient_id or "anonymous",
         consultation_id=req.consultation_id,
@@ -305,4 +316,20 @@ def my_registrations(
             "doctor": r.doctor.name if r.doctor else "",
         }
         for r in registrations
+    ]
+
+
+@router.get("/departments")
+def list_departments(db: Session = Depends(get_db)):
+    return [{"id": d.id, "name": d.name} for d in db.query(Department).all()]
+
+
+@router.get("/doctors")
+def list_doctors(department_id: int = None, db: Session = Depends(get_db)):
+    q = db.query(Doctor)
+    if department_id:
+        q = q.filter(Doctor.department_id == department_id)
+    return [
+        {"id": d.id, "name": d.name, "title": d.title, "department_id": d.department_id, "introduction": d.introduction}
+        for d in q.all()
     ]

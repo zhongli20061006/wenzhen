@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.api.auth import get_current_user, require_role
+from app.logger import logger
 from app.schemas.doctor import FeedbackRequest
 from app.models.registration import Registration, RegistrationStatus
 from app.models.consultation_session import ConsultationSession, SessionStatus
@@ -16,12 +17,17 @@ router = APIRouter(dependencies=[Depends(require_role("doctor"))])
 
 @router.get("/today-patients")
 def today_patients(
-    status: str = Query(default=None),
+    current_user: dict = Depends(get_current_user),
+    status: str = Query(default="已预约"),
     time_slot: str = Query(default=None),
     db: Session = Depends(get_db),
 ):
     today = date.today()
+    doctor_id = current_user.get("doctor_id")
     query = db.query(Registration).filter(Registration.registration_date == today)
+
+    if doctor_id:
+        query = query.filter(Registration.doctor_id == doctor_id)
 
     if status:
         query = query.filter(Registration.status == status)
@@ -119,6 +125,7 @@ def submit_feedback(req: FeedbackRequest, db: Session = Depends(get_db)):
         ConsultationSession.id == reg.consultation_id
     ).first()
 
+    logger.info("医生提交反馈 registration_id=%d, is_correct=%s", req.registration_id, req.is_correct)
     feedback = DiagnosisFeedback(
         registration_id=req.registration_id,
         consultation_id=reg.consultation_id,
