@@ -396,3 +396,69 @@ def available_timeslots(doctor_id: int, registration_date: str, db: Session = De
         }
         for v in slots
     ]
+
+
+@router.post("/pipeline-debug")
+def pipeline_debug(req: StartConsultationRequest, current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
+    """
+    降解模式全流程调试端点。返回管道的每一步结果。
+    """
+    from app.config import settings
+    from app.services.extraction_service import extract_from_description
+
+    stages = {}
+    stages["ai_mode"] = settings.AI_MODE
+
+    stages["symptom_matches"] = []
+    if req.description:
+        desc_matches = extract_from_description(req.description, db)
+        stages["symptom_matches"].extend(desc_matches)
+    for raw in req.symptoms:
+        matches = standardize_symptoms(raw, db)
+        if matches:
+            stages["symptom_matches"].extend(matches)
+
+    symptom_names = list({m["symptom_name"] for m in stages["symptom_matches"]})
+
+    collected_data = {
+        "symptoms": {name: True for name in symptom_names},
+        "onset_days": None,
+        "severity": req.severity,
+        "medical_history": req.medical_history or [],
+        "current_medications": req.current_medications or [],
+        "allergies": req.allergies or [],
+    }
+    if req.duration:
+        m = re.match(r'(\d+)\s*(天|周|个月|日)', req.duration)
+        if m:
+            n = int(m.group(1))
+            unit = m.group(2)
+            if unit in ('周',):
+                collected_data["onset_days"] = n * 7
+            elif unit in ('个月',):
+                collected_data["onset_days"] = n * 30
+            else:
+                collected_data["onset_days"] = n
+
+    stages["collected_data"] = {k: str(v) if isinstance(v, (dict, list)) else v for k, v in collected_data.items()}
+
+    candidates = calculate_disease_scores(collected_data, db)
+    stages["initial_candidates"] = [
+        {"name": c["disease_name"], "score": c["score"], "dept": c["department_name"], "urgency": c["urgency"]}
+        for c in candidates[:10]
+    ]
+
+    candidates = prune_by_required(candidates)
+    candidates = apply_differential_rules(candidates, collected_data, db)
+    stages["after_rules"] = [
+        {"name": c["disease_name"], "score": c["score"]}
+        for c in candidates[:10]
+    ]
+
+    next_s = select_next_symptom(candidates, symptom_names, db)
+    stages["next_question"] = next_s
+
+    result = generate_recommendation(candidates, collected_data)
+    stages["recommendation"] = result
+
+    return stages
