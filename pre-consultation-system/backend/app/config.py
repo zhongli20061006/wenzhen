@@ -18,7 +18,7 @@ class Settings(BaseSettings):
 
     AI_MODE: str = "degrade"
     DEEPSEEK_API_KEY: str = ""
-    DEEPSEEK_ENABLED: bool = False
+    DEEPSEEK_ENABLED: bool = True
 
     @property
     def DATABASE_URL(self) -> str:
