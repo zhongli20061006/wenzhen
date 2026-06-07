@@ -107,7 +107,7 @@ async def _call(user_prompt: str) -> dict:
         {"role": "user", "content": user_prompt},
     ]
     body = {
-        "model": "v4flash",
+        "model": "deepseek-v4-flash",
         "messages": messages,
         "temperature": 0.3,
         "max_tokens": 1500,
@@ -147,7 +147,7 @@ async def stream_call(user_prompt: str) -> AsyncGenerator[str, None]:
         {"role": "user", "content": user_prompt},
     ]
     body = {
-        "model": "v4flash",
+        "model": "deepseek-v4-flash",
         "messages": messages,
         "temperature": 0.3,
         "max_tokens": 1500,

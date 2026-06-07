@@ -69,14 +69,25 @@ def _bert_predict(text: str) -> list[tuple[str, str]]:
 def extract_bert(text: str) -> list[dict]:
     """
     BERT NER 提取症状实体。
-    当前 shibing624/bert4ner-base-chinese 为通用 NER 模型(ORG/LOC/PER/TIME)，
-    未训练医学症状标签。本函数兜底使用关键词/别名/同义词匹配。
-    后续可替换为 CBLUE/CMeEE 医学 NER 模型或 fine-tune。
+    优先使用微调后的医学 NER 模型，不可用时回退关键词匹配。
     """
     db = None
     try:
         from app.database import SessionLocal
         db = SessionLocal()
+        from model.predict_ner import predict_entities, map_to_symptom_dict
+        entities = predict_entities(text)
+        if entities:
+            results = map_to_symptom_dict(entities, db)
+            if results:
+                logger.debug("NER 模型提取: %d 个症状实体", len(results))
+                return results
+        return match_keywords(text, db)
+    except Exception as e:
+        logger.debug("NER 模型不可用(%s), 回退关键词匹配", e)
+        if db is None:
+            from app.database import SessionLocal
+            db = SessionLocal()
         return match_keywords(text, db)
     finally:
         if db:
