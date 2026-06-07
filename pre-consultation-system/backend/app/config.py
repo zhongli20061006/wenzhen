@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     DISCRIMINATION_THRESHOLD: float = 0.15
 
     AI_MODE: str = "degrade"
+    DEEPSEEK_API_KEY: str = ""
+    DEEPSEEK_ENABLED: bool = False
 
     @property
     def DATABASE_URL(self) -> str:

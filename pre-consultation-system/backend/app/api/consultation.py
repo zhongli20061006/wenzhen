@@ -462,3 +462,18 @@ def pipeline_debug(req: StartConsultationRequest, current_user: dict = Depends(g
     stages["recommendation"] = result
 
     return stages
+
+
+@router.get("/deepseek/health")
+async def deepseek_health():
+    from app.services.deepseek_client import health_check
+    return await health_check()
+
+
+@router.get("/deepseek/test")
+async def deepseek_test():
+    from app.services.deepseek_client import is_available, enrich_symptoms
+    if not is_available():
+        return {"status": "disabled", "message": "请设置 DEEPSEEK_API_KEY 并启用 DEEPSEEK_ENABLED"}
+    result = await enrich_symptoms(["发热", "咳嗽"], "最近几天一直不舒服")
+    return {"status": "ok", "result": result}
