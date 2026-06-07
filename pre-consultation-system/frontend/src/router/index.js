@@ -13,6 +13,7 @@ const routes = [
 
   { path: '/doctor/today', name: 'TodayPatients', component: () => import('../views/doctor/TodayPatients.vue'), meta: { role: 'doctor' } },
   { path: '/doctor/patient/:id', name: 'PatientReport', component: () => import('../views/doctor/PatientReport.vue'), meta: { role: 'doctor' } },
+  { path: '/doctor/feedback', name: 'FeedbackHistory', component: () => import('../views/doctor/FeedbackHistory.vue'), meta: { role: 'doctor' } },
 
   { path: '/admin/symptoms', name: 'SymptomManage', component: () => import('../views/admin/SymptomManage.vue'), meta: { role: 'admin' } },
   { path: '/admin/diseases', name: 'DiseaseManage', component: () => import('../views/admin/DiseaseManage.vue'), meta: { role: 'admin' } },

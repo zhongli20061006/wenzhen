@@ -199,8 +199,10 @@ def generate_recommendation(candidates: list[dict], collected_data: dict) -> dic
     recommendations = []
     for i, g in enumerate(ranked, start=1):
         urgency_map = {"紧急": "建议立即就医", "就诊": "建议近期就诊", "观察": "可观察等待"}
+        dep_id = next((c["department_id"] for c in effective if c["department_name"] == g["department_name"]), None)
         recommendations.append({
             "department": g["department_name"],
+            "department_id": dep_id,
             "rank": i,
             "reason": "；".join(g["reasons"]),
             "diseases_considered": g["diseases"],

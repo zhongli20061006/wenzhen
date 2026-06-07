@@ -1,5 +1,6 @@
 import uuid
 import json
+import re
 from datetime import date
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -69,6 +70,20 @@ def start_consultation(req: StartConsultationRequest, current_user: dict = Depen
             collected_data["onset_days"] = (date.today() - onset).days
         except ValueError:
             pass
+
+    if req.duration:
+        m = re.match(r'(\d+)\s*(天|周|个月|日)', req.duration)
+        if m:
+            n = int(m.group(1))
+            unit = m.group(2)
+            if unit in ('周',):
+                collected_data["onset_days"] = n * 7
+            elif unit in ('个月',):
+                collected_data["onset_days"] = n * 30
+            else:
+                collected_data["onset_days"] = n
+        else:
+            collected_data["duration_text"] = req.duration
 
     candidates = calculate_disease_scores(collected_data, db)
     candidates = prune_by_required(candidates)
@@ -267,8 +282,9 @@ def create_registration(req: RegistrationRequest, db: Session = Depends(get_db))
     except ValueError:
         raise HTTPException(status_code=400, detail="日期格式错误，需要 YYYY-MM-DD")
 
-    if req.time_slot not in ("上午", "下午", "晚上"):
-        raise HTTPException(status_code=400, detail="时段必须是上午/下午/晚上")
+    time_slots = [s.value for s in TimeSlot]
+    if req.time_slot not in time_slots:
+        raise HTTPException(status_code=400, detail=f"时段必须是 {', '.join(time_slots)} 之一")
 
     logger.info("挂号成功 session=%s, patient=%s, dept=%s, doctor=%s, date=%s", req.consultation_id, session.patient_id, dep.name, doctor.name, req.registration_date)
     registration = Registration(
@@ -278,7 +294,7 @@ def create_registration(req: RegistrationRequest, db: Session = Depends(get_db))
         doctor_id=req.doctor_id,
         registration_date=reg_date,
         time_slot=TimeSlot(req.time_slot),
-        status=RegistrationStatus.BOOKED,
+        status=RegistrationStatus.WAITING,
     )
     db.add(registration)
     session.status = SessionStatus.BOOKING
@@ -333,3 +349,14 @@ def list_doctors(department_id: int = None, db: Session = Depends(get_db)):
         {"id": d.id, "name": d.name, "title": d.title, "department_id": d.department_id, "introduction": d.introduction}
         for d in q.all()
     ]
+
+
+@router.get("/timeslots")
+def get_timeslots():
+    slots = [s.value for s in TimeSlot]
+    result = []
+    for v in slots:
+        h = int(v.split(":")[0])
+        period = "上午" if h < 12 else "下午"
+        result.append({"value": v, "period": period})
+    return result

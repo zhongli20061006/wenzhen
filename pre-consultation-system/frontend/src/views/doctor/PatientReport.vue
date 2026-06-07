@@ -4,7 +4,7 @@
       <template #header>
         <div class="header-bar">
           <span>预问诊报告</span>
-          <el-button @click="$router.push('/doctor/today')">返回</el-button>
+          <el-button @click="$router.push({ name: 'TodayPatients' })">返回</el-button>
         </div>
       </template>
 
@@ -94,7 +94,7 @@ onMounted(async () => {
   try {
     const id = route.params.id
     report.value = await api.get(`/doctor/patient/${id}/report`)
-    departments.value = await api.get('/admin/departments')
+    departments.value = await api.get('/consultation/departments')
   } finally {
     loading.value = false
   }

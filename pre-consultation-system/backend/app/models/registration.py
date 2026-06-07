@@ -6,9 +6,25 @@ import enum
 
 
 class TimeSlot(str, enum.Enum):
-    MORNING = "上午"
-    AFTERNOON = "下午"
-    EVENING = "晚上"
+    S0830 = "08:30"
+    S0900 = "09:00"
+    S0930 = "09:30"
+    S1000 = "10:00"
+    S1030 = "10:30"
+    S1100 = "11:00"
+    S1130 = "11:30"
+    S1400 = "14:00"
+    S1430 = "14:30"
+    S1500 = "15:00"
+    S1530 = "15:30"
+    S1600 = "16:00"
+    S1630 = "16:30"
+    S1700 = "17:00"
+
+    @classmethod
+    def period(cls, slot: "TimeSlot") -> str:
+        h = int(slot.value.split(":")[0])
+        return "上午" if h < 12 else "下午"
 
 
 class RegistrationStatus(str, enum.Enum):

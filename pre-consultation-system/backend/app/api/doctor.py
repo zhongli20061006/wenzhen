@@ -1,12 +1,13 @@
 from datetime import date
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 from app.database import get_db
 from app.api.auth import get_current_user, require_role
 from app.logger import logger
 from app.schemas.doctor import FeedbackRequest
-from app.models.registration import Registration, RegistrationStatus
+from app.models.registration import Registration, RegistrationStatus, TimeSlot
 from app.models.consultation_session import ConsultationSession, SessionStatus
 from app.models.diagnosis_feedback import DiagnosisFeedback
 from app.models.question_record import QuestionRecord
@@ -18,7 +19,8 @@ router = APIRouter(dependencies=[Depends(require_role("doctor"))])
 @router.get("/today-patients")
 def today_patients(
     current_user: dict = Depends(get_current_user),
-    status: str = Query(default="已预约"),
+    status: str = Query(default="等待中"),
+    period: str = Query(default=None),
     time_slot: str = Query(default=None),
     db: Session = Depends(get_db),
 ):
@@ -36,14 +38,19 @@ def today_patients(
 
     registrations = query.order_by(Registration.created_at).all()
 
+    if period:
+        registrations = [r for r in registrations if TimeSlot.period(r.time_slot) == period]
+
     return [
         {
             "registration_id": r.id,
             "patient_id": r.patient_id,
             "time_slot": r.time_slot.value,
+            "period": TimeSlot.period(r.time_slot),
             "status": r.status.value,
             "department": r.department.name if r.department else "",
             "doctor": r.doctor.name if r.doctor else "",
+            "date": r.registration_date.isoformat(),
         }
         for r in registrations
     ]
@@ -89,6 +96,7 @@ def patient_report(registration_id: int, db: Session = Depends(get_db)):
             "id": reg.id,
             "patient_id": reg.patient_id,
             "department": reg.department.name if reg.department else "",
+            "department_id": reg.department_id,
             "doctor": reg.doctor.name if reg.doctor else "",
             "date": reg.registration_date.isoformat(),
             "time_slot": reg.time_slot.value,
@@ -141,3 +149,41 @@ def submit_feedback(req: FeedbackRequest, db: Session = Depends(get_db)):
     db.commit()
 
     return {"message": "反馈提交成功"}
+
+
+@router.get("/feedback-history")
+def feedback_history(db: Session = Depends(get_db)):
+    feedbacks = (
+        db.query(DiagnosisFeedback)
+        .join(Registration, DiagnosisFeedback.registration_id == Registration.id)
+        .order_by(DiagnosisFeedback.id.desc())
+        .limit(50)
+        .all()
+    )
+    return [
+        {
+            "id": f.id,
+            "registration_id": f.registration_id,
+            "is_correct": f.is_correct,
+            "doctor_note": f.doctor_note,
+            "recommended_dept": f.recommended_department.name if f.recommended_department else "",
+            "actual_dept": f.actual_department.name if f.actual_department else "",
+            "patient_id": f.registration.patient_id if f.registration else "",
+            "date": f.registration.registration_date.isoformat() if f.registration else "",
+        }
+        for f in feedbacks
+    ]
+
+
+@router.get("/accuracy")
+def doctor_accuracy(db: Session = Depends(get_db)):
+    total = db.query(DiagnosisFeedback).count()
+    correct = db.query(DiagnosisFeedback).filter(DiagnosisFeedback.is_correct == True).count()
+    incorrect = total - correct
+    accuracy = round(correct / total, 4) if total > 0 else 0
+    return {
+        "total": total,
+        "correct": correct,
+        "incorrect": incorrect,
+        "accuracy": accuracy,
+    }

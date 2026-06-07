@@ -60,6 +60,7 @@ export const useConsultationStore = defineStore('consultation', () => {
     messages.value = []
     result.value = null
     round.value = 0
+    totalRounds.value = 5
   }
 
   return { sessionId, messages, result, loading, round, totalRounds, start, answer, getResult, reset }

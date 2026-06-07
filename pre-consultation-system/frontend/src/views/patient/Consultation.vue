@@ -1,13 +1,14 @@
 <template>
   <div class="consultation-page">
+    <div class="nav-bar">
+      <el-button text @click="$router.push({ name: 'Profile' })">个人中心</el-button>
+      <el-button text @click="goRegistrations">我的挂号</el-button>
+    </div>
     <el-card class="chat-card">
       <template #header>
         <div class="chat-header">
           <span>智能预问诊</span>
-          <div>
-            <el-button text @click="$router.push('/profile')">个人中心</el-button>
-            <el-button text @click="resetChat">重新开始</el-button>
-          </div>
+          <el-button text type="danger" @click="confirmReset">重新开始</el-button>
         </div>
       </template>
 
@@ -18,8 +19,8 @@
           </el-form-item>
           <el-row :gutter="12">
             <el-col :span="12">
-              <el-form-item label="发病日期">
-                <el-date-picker v-model="form.onset_date" type="date" placeholder="选择日期" style="width:100%" />
+              <el-form-item label="不适持续了多久">
+                <el-input v-model="form.duration" placeholder="如：3天、1周、2个月" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -44,19 +45,14 @@
       </div>
 
       <div v-else class="chat-section">
+        <div class="round-info">第 {{ store.round }} / {{ store.totalRounds }} 轮</div>
         <div class="messages" ref="msgRef">
           <div v-for="(msg, i) in store.messages" :key="i" :class="['msg', msg.role]">
             <div class="bubble">{{ msg.text }}</div>
             <div v-if="msg.role === 'system' && msg.symptom_id" class="actions">
-              <el-button size="small" type="primary" @click="handleAnswer(msg.symptom_id, 'YES')" :disabled="answering">
-                有
-              </el-button>
-              <el-button size="small" @click="handleAnswer(msg.symptom_id, 'NO')" :disabled="answering">
-                没有
-              </el-button>
-              <el-button size="small" @click="handleAnswer(msg.symptom_id, 'UNKNOWN')" :disabled="answering">
-                不确定
-              </el-button>
+              <el-button size="small" type="primary" @click="handleAnswer(msg.symptom_id, 'YES')" :disabled="answering">有</el-button>
+              <el-button size="small" @click="handleAnswer(msg.symptom_id, 'NO')" :disabled="answering">没有</el-button>
+              <el-button size="small" @click="handleAnswer(msg.symptom_id, 'UNKNOWN')" :disabled="answering">不确定</el-button>
             </div>
           </div>
           <div v-if="store.loading" class="msg system">
@@ -77,6 +73,7 @@
 import { ref, reactive, nextTick, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useConsultationStore } from '../../stores/consultation'
+import { ElMessageBox } from 'element-plus'
 
 const router = useRouter()
 const store = useConsultationStore()
@@ -86,7 +83,7 @@ const started = ref(false)
 
 const form = reactive({
   symptoms: '',
-  onset_date: null,
+  duration: '',
   severity: 5,
   medical_history: '',
   medications: '',
@@ -95,15 +92,16 @@ const form = reactive({
 
 async function startChat() {
   if (!form.symptoms.trim()) return
-  started.value = true
-  const symptoms = form.symptoms.split(/[,，、\s]+/).filter(Boolean)
+  const symptoms = form.symptoms.split(/[,，、]+/).filter(Boolean).map(s => s.trim()).filter(Boolean)
+  if (!symptoms.length) return
   await store.start(symptoms, {
-    onset_date: form.onset_date || undefined,
+    duration: form.duration || undefined,
     severity: form.severity,
-    medical_history: form.medical_history ? form.medical_history.split(/[,，、\s]+/) : [],
-    current_medications: form.medications ? form.medications.split(/[,，、\s]+/) : [],
-    allergies: form.allergies ? form.allergies.split(/[,，、\s]+/) : [],
+    medical_history: form.medical_history ? form.medical_history.split(/[,，、]+/).filter(Boolean) : [],
+    current_medications: form.medications ? form.medications.split(/[,，、]+/).filter(Boolean) : [],
+    allergies: form.allergies ? form.allergies.split(/[,，、]+/).filter(Boolean) : [],
   })
+  started.value = true
 }
 
 async function handleAnswer(symptomId, answer) {
@@ -116,12 +114,25 @@ async function handleAnswer(symptomId, answer) {
 }
 
 function goResult() {
-  router.push(`/consultation/${store.sessionId}/result`)
+  router.push({ name: 'Result', params: { id: store.sessionId } })
 }
 
-function resetChat() {
-  store.reset()
-  started.value = false
+function goRegistrations() {
+  router.push({ name: 'MyRegistrations' })
+}
+
+async function confirmReset() {
+  try {
+    await ElMessageBox.confirm('确定要重新开始吗？当前问诊进度将丢失。', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' })
+    store.reset()
+    started.value = false
+    form.symptoms = ''
+    form.duration = ''
+    form.severity = 5
+    form.medical_history = ''
+    form.medications = ''
+    form.allergies = ''
+  } catch {}
 }
 
 watch(() => store.messages.length, () => {
@@ -132,12 +143,14 @@ watch(() => store.messages.length, () => {
 </script>
 
 <style scoped>
-.consultation-page { max-width: 700px; margin: 20px auto; padding: 0 16px; }
+.consultation-page { max-width: 700px; margin: 10px auto; padding: 0 16px; }
+.nav-bar { display: flex; justify-content: flex-end; margin-bottom: 8px; }
 .chat-card { min-height: 600px; }
 .chat-header { display: flex; justify-content: space-between; align-items: center; }
 .input-section { padding: 16px 0; }
 .chat-section { display: flex; flex-direction: column; }
-.messages { max-height: 500px; overflow-y: auto; padding: 12px 0; }
+.round-info { text-align: center; color: #999; font-size: 13px; margin-bottom: 8px; }
+.messages { max-height: 450px; overflow-y: auto; padding: 12px 0; }
 .msg { margin-bottom: 16px; }
 .msg.system { text-align: left; }
 .msg.user { text-align: right; }

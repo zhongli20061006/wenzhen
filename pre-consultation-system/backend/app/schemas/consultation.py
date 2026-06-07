@@ -5,6 +5,7 @@ from typing import Optional
 class StartConsultationRequest(BaseModel):
     symptoms: list[str]
     onset_date: Optional[str] = None
+    duration: Optional[str] = None
     severity: Optional[int] = None
     medical_history: Optional[list[str]] = None
     current_medications: Optional[list[str]] = None

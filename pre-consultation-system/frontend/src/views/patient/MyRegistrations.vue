@@ -1,27 +1,35 @@
 <template>
-  <div class="my-reg-page">
+  <div class="reg-list-page">
+    <div class="nav-bar">
+      <el-button text @click="$router.push({ name: 'Consultation' })">返回问诊</el-button>
+      <el-button text @click="$router.push({ name: 'Profile' })">个人中心</el-button>
+    </div>
     <el-card>
       <template #header><h2>我的挂号记录</h2></template>
-      <el-table :data="list" v-loading="loading" stripe style="width:100%">
+      <div v-if="loading" v-loading="true" style="min-height:120px" />
+      <el-table v-else-if="list.length" :data="list" stripe>
         <el-table-column prop="registration_date" label="日期" width="120" />
         <el-table-column prop="time_slot" label="时段" width="80" />
         <el-table-column prop="department" label="科室" />
         <el-table-column prop="doctor" label="医生" />
-        <el-table-column prop="status" label="状态" width="100">
+        <el-table-column label="状态" width="90">
           <template #default="{ row }">
             <el-tag :type="statusType(row.status)">{{ row.status }}</el-tag>
           </template>
         </el-table-column>
       </el-table>
-      <el-button @click="$router.push('/consultation')" style="margin-top:12px">重新问诊</el-button>
+      <el-empty v-else description="暂无挂号记录" />
+      <el-button type="primary" @click="$router.push({ name: 'Consultation' })" style="margin-top:16px;width:100%">重新问诊</el-button>
     </el-card>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import api from '../../api'
 
+const router = useRouter()
 const list = ref([])
 const loading = ref(true)
 
@@ -40,5 +48,6 @@ function statusType(s) {
 </script>
 
 <style scoped>
-.my-reg-page { max-width: 800px; margin: 20px auto; padding: 0 16px; }
+.reg-list-page { max-width: 800px; margin: 10px auto; padding: 0 16px; }
+.nav-bar { display: flex; justify-content: space-between; margin-bottom: 8px; }
 </style>
