@@ -56,7 +56,7 @@ const form = reactive({
   consultation_id: route.query.consultation_id || store.sessionId,
   department_id: Number(route.query.department_id) || null,
   doctor_id: null,
-  reg_date: new Date(Date.now() + 86400000),
+  reg_date: new Date(),
   time_slot: '08:30',
 })
 

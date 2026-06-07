@@ -61,8 +61,8 @@ const roleLabel = computed(() => {
 })
 
 const roleType = computed(() => {
-  const map = { admin: 'danger', doctor: 'warning', patient: '' }
-  return map[profile.value.role] || ''
+  const map = { admin: 'danger', doctor: 'warning', patient: 'info' }
+  return map[profile.value.role] || 'info'
 })
 
 function getHomeRoute() {
