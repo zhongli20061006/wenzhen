@@ -3,6 +3,7 @@ from typing import Optional
 
 
 class StartConsultationRequest(BaseModel):
+    description: Optional[str] = None
     symptoms: list[str]
     onset_date: Optional[str] = None
     duration: Optional[str] = None

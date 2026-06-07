@@ -15,31 +15,40 @@
 
       <div v-if="!started" class="input-section">
         <el-form :model="form" label-position="top">
-          <el-form-item label="请描述您的症状（多个症状用逗号分隔）">
-            <el-input v-model="form.symptoms" type="textarea" :rows="3" placeholder="例如：头痛、发烧、咳嗽" />
+          <el-form-item label="请描述您的不适">
+            <el-input v-model="form.description" type="textarea" :rows="4" placeholder="用您自己的话描述不适，例如：最近几天一直头疼，还有点发烧，咳嗽的时候胸口会痛&#10;&#10;系统会自动从描述中识别症状关键词" />
           </el-form-item>
-          <el-row :gutter="12">
-            <el-col :span="12">
-              <el-form-item label="不适持续了多久">
-                <el-input v-model="form.duration" placeholder="如：3天、1周、2个月" />
+
+          <el-collapse v-model="showAdvanced">
+            <el-collapse-item title="高级：添加具体症状" name="1">
+              <el-form-item label="症状（多个用逗号分隔）">
+                <el-input v-model="form.symptoms" placeholder="例如：头痛、发烧、咳嗽" />
               </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="疼痛程度（1-10）">
-                <el-slider v-model="form.severity" :min="1" :max="10" show-input />
+              <el-row :gutter="12">
+                <el-col :span="12">
+                  <el-form-item label="不适持续了多久">
+                    <el-input v-model="form.duration" placeholder="如：3天、1周、2个月" />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="疼痛程度（1-10）">
+                    <el-slider v-model="form.severity" :min="1" :max="10" show-input />
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-form-item label="既往病史（可选）">
+                <el-input v-model="form.medical_history" placeholder="如：高血压、糖尿病" />
               </el-form-item>
-            </el-col>
-          </el-row>
-          <el-form-item label="既往病史（可选）">
-            <el-input v-model="form.medical_history" placeholder="如：高血压、糖尿病" />
-          </el-form-item>
-          <el-form-item label="正在服用的药物（可选）">
-            <el-input v-model="form.medications" placeholder="如：阿司匹林" />
-          </el-form-item>
-          <el-form-item label="过敏史（可选）">
-            <el-input v-model="form.allergies" placeholder="如：青霉素" />
-          </el-form-item>
-          <el-button type="primary" @click="startChat" :loading="store.loading" style="width:100%">
+              <el-form-item label="正在服用的药物（可选）">
+                <el-input v-model="form.medications" placeholder="如：阿司匹林" />
+              </el-form-item>
+              <el-form-item label="过敏史（可选）">
+                <el-input v-model="form.allergies" placeholder="如：青霉素" />
+              </el-form-item>
+            </el-collapse-item>
+          </el-collapse>
+
+          <el-button type="primary" @click="startChat" :loading="store.loading" style="width:100%" :disabled="!canStart">
             开始预问诊
           </el-button>
         </el-form>
@@ -71,7 +80,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, nextTick, watch } from 'vue'
+import { ref, reactive, computed, nextTick, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useConsultationStore } from '../../stores/consultation'
 import { ElMessageBox } from 'element-plus'
@@ -81,8 +90,10 @@ const store = useConsultationStore()
 const msgRef = ref(null)
 const answering = ref(false)
 const started = ref(false)
+const showAdvanced = ref([])
 
 const form = reactive({
+  description: '',
   symptoms: '',
   duration: '',
   severity: 5,
@@ -91,11 +102,13 @@ const form = reactive({
   allergies: '',
 })
 
+const canStart = computed(() => form.description.trim() || form.symptoms.trim())
+
 async function startChat() {
-  if (!form.symptoms.trim()) return
+  if (!canStart.value) return
   const symptoms = form.symptoms.split(/[,，、]+/).filter(Boolean).map(s => s.trim()).filter(Boolean)
-  if (!symptoms.length) return
   await store.start(symptoms, {
+    description: form.description.trim() || undefined,
     duration: form.duration || undefined,
     severity: form.severity,
     medical_history: form.medical_history ? form.medical_history.split(/[,，、]+/).filter(Boolean) : [],
@@ -127,6 +140,7 @@ async function confirmReset() {
     await ElMessageBox.confirm('确定要重新开始吗？当前问诊进度将丢失。', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' })
     store.reset()
     started.value = false
+    form.description = ''
     form.symptoms = ''
     form.duration = ''
     form.severity = 5
