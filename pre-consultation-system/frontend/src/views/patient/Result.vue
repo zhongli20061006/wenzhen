@@ -2,6 +2,7 @@
   <div class="result-page">
     <div class="nav-bar">
       <el-button text @click="$router.push({ name: 'Consultation' })">返回问诊</el-button>
+      <el-button text @click="$router.push({ name: 'RegistrationConfirm' })">直接挂号</el-button>
       <el-button text @click="$router.push({ name: 'Profile' })">个人中心</el-button>
     </div>
     <el-card>

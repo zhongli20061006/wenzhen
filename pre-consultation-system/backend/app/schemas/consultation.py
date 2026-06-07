@@ -39,7 +39,7 @@ class RecommendResult(BaseModel):
 
 
 class RegistrationRequest(BaseModel):
-    consultation_id: str
+    consultation_id: Optional[str] = None
     department_id: int
     doctor_id: int
     registration_date: str

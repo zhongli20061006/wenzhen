@@ -264,10 +264,12 @@ def get_result(consultation_id: str, db: Session = Depends(get_db)):
 
 
 @router.post("/registration")
-def create_registration(req: RegistrationRequest, db: Session = Depends(get_db)):
-    session = db.query(ConsultationSession).filter(ConsultationSession.id == req.consultation_id).first()
-    if not session:
-        raise HTTPException(status_code=404, detail="会话不存在")
+def create_registration(req: RegistrationRequest, current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
+    session = None
+    if req.consultation_id:
+        session = db.query(ConsultationSession).filter(ConsultationSession.id == req.consultation_id).first()
+        if not session:
+            raise HTTPException(status_code=404, detail="会话不存在")
 
     dep = db.query(Department).filter(Department.id == req.department_id).first()
     if not dep:
@@ -286,9 +288,9 @@ def create_registration(req: RegistrationRequest, db: Session = Depends(get_db))
     if req.time_slot not in time_slots:
         raise HTTPException(status_code=400, detail=f"时段必须是 {', '.join(time_slots)} 之一")
 
-    logger.info("挂号成功 session=%s, patient=%s, dept=%s, doctor=%s, date=%s", req.consultation_id, session.patient_id, dep.name, doctor.name, req.registration_date)
+    logger.info("挂号成功 session=%s, patient=%s, dept=%s, doctor=%s, date=%s", req.consultation_id or 'direct', current_user["username"], dep.name, doctor.name, req.registration_date)
     registration = Registration(
-        patient_id=session.patient_id or "anonymous",
+        patient_id=current_user["username"],
         consultation_id=req.consultation_id,
         department_id=req.department_id,
         doctor_id=req.doctor_id,
@@ -297,7 +299,8 @@ def create_registration(req: RegistrationRequest, db: Session = Depends(get_db))
         status=RegistrationStatus.WAITING,
     )
     db.add(registration)
-    session.status = SessionStatus.BOOKING
+    if session:
+        session.status = SessionStatus.BOOKING
     db.commit()
 
     return {

@@ -1,8 +1,9 @@
 <template>
   <div class="consultation-page">
     <div class="nav-bar">
+      <el-button text @click="$router.push({ name: 'RegistrationConfirm' })">直接挂号</el-button>
+      <el-button text @click="$router.push({ name: 'MyRegistrations' })">我的挂号</el-button>
       <el-button text @click="$router.push({ name: 'Profile' })">个人中心</el-button>
-      <el-button text @click="goRegistrations">我的挂号</el-button>
     </div>
     <el-card class="chat-card">
       <template #header>
