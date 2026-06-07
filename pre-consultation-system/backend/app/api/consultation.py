@@ -30,6 +30,8 @@ from app.services.reasoning_engine import (
     select_next_symptom,
     generate_recommendation,
 )
+from app.services.final_scorer import fuse_scores, degrade_only
+from app.services.deepseek_client import is_available, rank_diseases
 
 router = APIRouter(dependencies=[Depends(get_current_user)])
 
@@ -38,8 +40,27 @@ def _build_question_text(symptom_name: str) -> str:
     return f"您是否有「{symptom_name}」的症状？"
 
 
+async def _fuse_candidates(candidates: list[dict], collected_data: dict) -> list[dict]:
+    """用 DeepSeek 重新排序候选疾病并融合评分，不可用时降级为规则引擎"""
+    if is_available():
+        symptoms = list(collected_data.get("symptoms", {}).keys()) if collected_data else []
+        ds_result = await rank_diseases(symptoms, candidates, collected_data)
+        ds_rankings = ds_result.get("rankings", [])
+        fusion = fuse_scores(candidates, ds_rankings)
+    else:
+        fusion = degrade_only(candidates)
+    return [{
+        "disease_id": m["disease_id"],
+        "disease_name": m["disease_name"],
+        "score": m["final_score"],
+        "department_id": m["department_id"],
+        "department_name": m["department_name"],
+        "urgency": m["urgency"],
+    } for m in fusion["merged"]]
+
+
 @router.post("/start")
-def start_consultation(req: StartConsultationRequest, current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
+async def start_consultation(req: StartConsultationRequest, current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
     session_id = str(uuid.uuid4())
 
     symptom_matches = []
@@ -90,6 +111,7 @@ def start_consultation(req: StartConsultationRequest, current_user: dict = Depen
     candidates = calculate_disease_scores(collected_data, db)
     candidates = prune_by_required(candidates)
     candidates = apply_differential_rules(candidates, collected_data, db)
+    candidates = await _fuse_candidates(candidates, collected_data)
 
     session = ConsultationSession(
         id=session_id,
@@ -143,7 +165,7 @@ def start_consultation(req: StartConsultationRequest, current_user: dict = Depen
 
 
 @router.post("/{consultation_id}/answer")
-def answer_question(consultation_id: str, req: AnswerRequest, db: Session = Depends(get_db)):
+async def answer_question(consultation_id: str, req: AnswerRequest, db: Session = Depends(get_db)):
     session = db.query(ConsultationSession).filter(ConsultationSession.id == consultation_id).first()
     if not session:
         raise HTTPException(status_code=404, detail="会话不存在")
@@ -184,6 +206,7 @@ def answer_question(consultation_id: str, req: AnswerRequest, db: Session = Depe
     candidates = calculate_disease_scores(collected, db)
     candidates = prune_by_required(candidates)
     candidates = apply_differential_rules(candidates, collected, db)
+    candidates = await _fuse_candidates(candidates, collected)
 
     asked = list(session.asked_symptoms or [])
     if sym:
