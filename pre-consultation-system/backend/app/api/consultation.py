@@ -360,3 +360,34 @@ def get_timeslots():
         period = "上午" if h < 12 else "下午"
         result.append({"value": v, "period": period})
     return result
+
+
+@router.get("/timeslots/available")
+def available_timeslots(doctor_id: int, registration_date: str, db: Session = Depends(get_db)):
+    doctor = db.query(Doctor).filter(Doctor.id == doctor_id).first()
+    if not doctor:
+        raise HTTPException(status_code=404, detail="医生不存在")
+    try:
+        reg_date = date.fromisoformat(registration_date)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="日期格式错误")
+    max_total = doctor.max_patients_per_session or 20
+    used = {}
+    bookings = db.query(Registration).filter(
+        Registration.doctor_id == doctor_id,
+        Registration.registration_date == reg_date,
+    ).all()
+    for b in bookings:
+        slot = b.time_slot.value if hasattr(b.time_slot, 'value') else b.time_slot
+        used[slot] = used.get(slot, 0) + 1
+    slots = [s.value for s in TimeSlot]
+    return [
+        {
+            "value": v,
+            "period": "上午" if int(v.split(":")[0]) < 12 else "下午",
+            "total": max_total,
+            "used": used.get(v, 0),
+            "remaining": max_total - used.get(v, 0),
+        }
+        for v in slots
+    ]

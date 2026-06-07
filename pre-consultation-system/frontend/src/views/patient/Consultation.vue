@@ -50,7 +50,7 @@
           <div v-for="(msg, i) in store.messages" :key="i" :class="['msg', msg.role]">
             <div class="bubble">{{ msg.text }}</div>
             <div v-if="msg.role === 'system' && msg.symptom_id" class="actions">
-              <el-button size="small" type="primary" @click="handleAnswer(msg.symptom_id, 'YES')" :disabled="answering">有</el-button>
+              <el-button size="small" @click="handleAnswer(msg.symptom_id, 'YES')" :disabled="answering">有</el-button>
               <el-button size="small" @click="handleAnswer(msg.symptom_id, 'NO')" :disabled="answering">没有</el-button>
               <el-button size="small" @click="handleAnswer(msg.symptom_id, 'UNKNOWN')" :disabled="answering">不确定</el-button>
             </div>
