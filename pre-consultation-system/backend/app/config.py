@@ -16,6 +16,8 @@ class Settings(BaseSettings):
     CANDIDATE_THRESHOLD: int = 3
     DISCRIMINATION_THRESHOLD: float = 0.15
 
+    AI_MODE: str = "degrade"
+
     @property
     def DATABASE_URL(self) -> str:
         return f"mysql+pymysql://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}?charset=utf8mb4"
