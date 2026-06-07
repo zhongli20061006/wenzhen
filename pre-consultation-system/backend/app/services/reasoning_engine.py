@@ -6,15 +6,18 @@ from app.models.symptom_dict import SymptomDict
 from app.models.symptom_disease import SymptomDisease
 from app.models.department import Department
 from app.models.differential_rule import DifferentialRule
+from app.models.disease_confuser import DiseaseConfuser
 
 
 def calculate_disease_scores(collected_data: dict, db: Session) -> list[dict]:
     """
     根据已收集的症状，计算每个候选疾病的得分。
-    score = 匹配症状权重之和 / 该疾病所有症状总权重
+    score = (positive_matched_weight * 1.0 + negative_met_weight * 0.6) / total_weight
+    阳性症状命中加分，阴性症状未被命中扣分，鉴别症状加权 1.5 倍。
     """
     symptom_answers = collected_data.get("symptoms", {})
     matched_symptom_names = {name for name, ans in symptom_answers.items() if ans is True}
+    negative_symptom_names = {name for name, ans in symptom_answers.items() if ans is False}
 
     diseases = db.query(Disease).all()
     candidates = []
@@ -28,18 +31,29 @@ def calculate_disease_scores(collected_data: dict, db: Session) -> list[dict]:
         )
 
         total_weight = sum(a.weight for a in associations) or 1.0
-        matched_weight = 0.0
+        positive_matched = 0.0
+        negative_met = 0.0
         required_unmet = []
 
         for assoc in associations:
             sym = db.query(SymptomDict).filter(SymptomDict.id == assoc.symptom_id).first()
             if not sym:
                 continue
-            if sym.name in matched_symptom_names:
-                matched_weight += assoc.weight
-            if assoc.is_required and sym.name in symptom_answers and symptom_answers[sym.name] is False:
-                required_unmet.append(sym.name)
 
+            multiplier = 1.5 if assoc.is_discriminative else 1.0
+
+            if assoc.is_positive:
+                if sym.name in matched_symptom_names:
+                    positive_matched += assoc.weight * multiplier
+                if assoc.is_required and sym.name in symptom_answers and symptom_answers[sym.name] is False:
+                    required_unmet.append(sym.name)
+            else:
+                if sym.name in negative_symptom_names:
+                    positive_matched += assoc.weight * multiplier * 0.6
+                elif sym.name not in matched_symptom_names:
+                    negative_met += assoc.weight * multiplier * 0.3
+
+        effective = positive_matched + negative_met
         dep = db.query(Department).filter(Department.id == disease.department_id).first()
         candidates.append({
             "disease_id": disease.id,
@@ -47,8 +61,8 @@ def calculate_disease_scores(collected_data: dict, db: Session) -> list[dict]:
             "department_id": disease.department_id,
             "department_name": dep.name if dep else "",
             "urgency": disease.urgency.value,
-            "score": round(matched_weight / total_weight, 4),
-            "matched_weight": matched_weight,
+            "score": round(effective / total_weight, 4),
+            "matched_weight": positive_matched,
             "total_weight": total_weight,
             "required_met": len(required_unmet) == 0,
             "required_unmet": required_unmet,
@@ -111,55 +125,103 @@ def apply_differential_rules(candidates: list[dict], collected_data: dict, db: S
 
 def select_next_symptom(candidates: list[dict], asked_symptoms: list[str], db: Session) -> dict | None:
     """
-    选择鉴别力最高的下一个追问症状。
-    优先必要条件，其次按症状在候选疾病中的权重差异度选择。
+    基于鉴别力(discriminative power)选择下一个追问症状。
+
+    算法：
+    1. 对每个未问症状 s，计算其区分力：
+       disc(s) = sum over all disease pairs (d_i, d_j):
+         |weight(s, d_i) - weight(s, d_j)| * score(d_i) * score(d_j)
+    2. 疾病混淆加分: 若 s 在疾病混淆表中标记为鉴别症状，×1.5
+    3. 鉴别标记加分: 若 is_discriminative=True，×1.3
+    4. 必要条件优先: 若 is_required=True，×2.0
+    5. 阴性症状略降权: 若 is_positive=False，×0.8
+    6. 归一化到 0-10 供调试
+
+    返回区分力最高的症状。
     """
     asked_set = set(asked_symptoms)
-    candidate_symptom_scores: dict[str, dict] = {}
-
-    for candidate in candidates[:10]:
-        disease = db.query(Disease).filter(Disease.id == candidate["disease_id"]).first()
-        if not disease:
-            continue
-        associations = (
-            db.query(SymptomDisease)
-            .join(SymptomDict, SymptomDisease.symptom_id == SymptomDict.id)
-            .filter(SymptomDisease.disease_id == disease.id)
-            .all()
-        )
-        for assoc in associations:
-            sym = db.query(SymptomDict).filter(SymptomDict.id == assoc.symptom_id).first()
-            if not sym or sym.name in asked_set:
-                continue
-            if sym.name not in candidate_symptom_scores:
-                candidate_symptom_scores[sym.name] = {
-                    "symptom_id": sym.id,
-                    "symptom_name": sym.name,
-                    "is_required": assoc.is_required,
-                    "weights": [],
-                    "max_diff": 0.0,
-                }
-            candidate_symptom_scores[sym.name]["weights"].append(assoc.weight)
-
-    if not candidate_symptom_scores:
+    top = candidates[:10]
+    if not top:
         return None
 
-    for sym_name, info in candidate_symptom_scores.items():
-        weights = info["weights"]
-        if len(weights) >= 2:
-            info["max_diff"] = max(weights) - min(weights)
-        else:
-            info["max_diff"] = weights[0] if weights else 0
+    top_ids = [c["disease_id"] for c in top]
+    score_map = {c["disease_id"]: c["score"] for c in top}
 
-    required_symptoms = {n: i for n, i in candidate_symptom_scores.items() if i["is_required"]}
-    if required_symptoms:
-        best = max(required_symptoms.values(), key=lambda x: x["max_diff"])
-        return {"symptom_id": best["symptom_id"], "symptom_name": best["symptom_name"]}
+    all_assocs = db.query(SymptomDisease).filter(
+        SymptomDisease.disease_id.in_(top_ids)
+    ).all()
 
-    non_required = list(candidate_symptom_scores.values())
-    if not non_required:
+    symptom_ids = list({a.symptom_id for a in all_assocs})
+    symptoms = {s.id: s for s in db.query(SymptomDict).filter(SymptomDict.id.in_(symptom_ids)).all()}
+
+    unasked_sids = {
+        sid for sid in symptom_ids
+        if symptoms[sid].name not in asked_set
+    }
+
+    if not unasked_sids:
         return None
-    best = max(non_required, key=lambda x: x["max_diff"])
+
+    d_s_map: dict[int, dict[int, SymptomDisease]] = {}
+    for a in all_assocs:
+        d_s_map.setdefault(a.disease_id, {})[a.symptom_id] = a
+
+    confuser_sids: set[int] = set()
+    confusers = db.query(DiseaseConfuser).all()
+    top_id_set = set(top_ids)
+    for cf in confusers:
+        if cf.disease_a_id in top_id_set and cf.disease_b_id in top_id_set:
+            for sid in (cf.distinguishing_symptom_ids or []):
+                confuser_sids.add(sid)
+
+    scored: list[dict] = []
+    for sid in unasked_sids:
+        sym = symptoms[sid]
+        disc = 0.0
+        is_req = False
+        is_disc = False
+        is_pos = True
+
+        for i in range(len(top_ids)):
+            for j in range(i + 1, len(top_ids)):
+                di, dj = top_ids[i], top_ids[j]
+                wi = d_s_map.get(di, {}).get(sid)
+                wj = d_s_map.get(dj, {}).get(sid)
+                weight_i = wi.weight if wi else 0
+                weight_j = wj.weight if wj else 0
+                disc += abs(weight_i - weight_j) * score_map[di] * score_map[dj]
+
+                for w in (wi, wj):
+                    if w:
+                        if w.is_required:
+                            is_req = True
+                        if w.is_discriminative:
+                            is_disc = True
+                        if not w.is_positive:
+                            is_pos = False
+
+        if sid in confuser_sids:
+            disc *= 1.5
+        if is_disc:
+            disc *= 1.3
+        if is_req:
+            disc *= 2.0
+        if not is_pos:
+            disc *= 0.8
+
+        scored.append({
+            "symptom_id": sid,
+            "symptom_name": sym.name,
+            "disc_score": round(disc, 6),
+            "is_required": is_req,
+        })
+
+    if not scored:
+        return None
+
+    scored.sort(key=lambda x: x["disc_score"], reverse=True)
+    best = scored[0]
+
     return {"symptom_id": best["symptom_id"], "symptom_name": best["symptom_name"]}
 
 

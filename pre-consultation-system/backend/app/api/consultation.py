@@ -20,8 +20,9 @@ from app.models.question_record import QuestionRecord, AnswerType
 from app.models.registration import Registration, TimeSlot, RegistrationStatus
 from app.models.department import Department
 from app.models.doctor import Doctor
-from app.models.department import Department
+from app.models.symptom_dict import SymptomDict
 from app.services.symptom_standardizer import standardize_symptoms
+from app.services.extraction_service import extract_from_description
 from app.services.reasoning_engine import (
     calculate_disease_scores,
     prune_by_required,
@@ -37,31 +38,13 @@ def _build_question_text(symptom_name: str) -> str:
     return f"您是否有「{symptom_name}」的症状？"
 
 
-def _extract_symptoms_from_description(description: str, db: Session) -> list[dict]:
-    all_symptoms = db.query(SymptomDict).all()
-    extracted = []
-    seen = set()
-    for sym in all_symptoms:
-        if sym.name in description:
-            extracted.append({"symptom_id": sym.id, "symptom_name": sym.name})
-            seen.add(sym.name)
-            continue
-        if sym.aliases:
-            for alias in sym.aliases.split(","):
-                if alias.strip() and alias.strip() in description:
-                    extracted.append({"symptom_id": sym.id, "symptom_name": sym.name})
-                    seen.add(sym.name)
-                    break
-    return extracted
-
-
 @router.post("/start")
 def start_consultation(req: StartConsultationRequest, current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
     session_id = str(uuid.uuid4())
 
     symptom_matches = []
     if req.description:
-        desc_matches = _extract_symptoms_from_description(req.description, db)
+        desc_matches = extract_from_description(req.description, db)
         symptom_matches.extend(desc_matches)
     for raw in req.symptoms:
         matches = standardize_symptoms(raw, db)

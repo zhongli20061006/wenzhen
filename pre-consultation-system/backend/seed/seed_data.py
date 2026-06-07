@@ -17,6 +17,8 @@ from app.models.symptom_disease import SymptomDisease
 from app.models.differential_rule import DifferentialRule
 from app.models.doctor import Doctor
 from app.models.user import User
+from app.models.symptom_synonym import SymptomSynonym
+from app.models.disease_confuser import DiseaseConfuser
 
 Base.metadata.create_all(bind=engine)
 
@@ -438,6 +440,104 @@ def seed():
         doctor = Doctor(name=name, title=title, department_id=depts[dep_name], introduction=intro)
         db.add(doctor)
     print(f"医生: {len(doctor_list)} 个")
+
+    # ========== 症状同义词 ==========
+    synonym_list = [
+        ("发热", "发烧", 1.0), ("发热", "体温高", 0.95), ("发热", "烧得厉害", 0.9),
+        ("咳嗽", "干咳", 0.9), ("咳嗽", "咳个不停", 0.85), ("咳嗽", "一直咳", 0.85),
+        ("头痛", "头疼", 1.0), ("头痛", "脑袋痛", 0.95), ("头痛", "偏头痛", 0.9),
+        ("腹痛", "肚子痛", 1.0), ("腹痛", "胃疼", 0.9), ("腹痛", "腹部不适", 0.85),
+        ("呕吐", "吐了", 0.95), ("呕吐", "干呕", 0.9), ("呕吐", "反胃", 0.85),
+        ("腹泻", "拉肚子", 1.0), ("腹泻", "拉稀", 0.9), ("腹泻", "水样便", 0.85),
+        ("咽痛", "嗓子痛", 1.0), ("咽痛", "喉咙疼", 0.95), ("咽痛", "吞咽痛", 0.9),
+        ("呼吸困难", "喘不上气", 0.95), ("呼吸困难", "气短", 0.9), ("呼吸困难", "憋气", 0.85),
+        ("胸痛", "胸口痛", 1.0), ("胸痛", "胸闷", 0.9), ("胸痛", "心口痛", 0.85),
+        ("头晕", "眩晕", 0.95), ("头晕", "天旋地转", 0.9), ("头晕", "头昏", 0.85),
+        ("乏力", "没力气", 0.95), ("乏力", "浑身没劲", 0.9), ("乏力", "疲劳", 0.85),
+        ("关节痛", "关节疼", 0.95), ("关节痛", "膝盖痛", 0.9),
+        ("腰痛", "腰疼", 1.0), ("腰痛", "腰酸", 0.9),
+        ("心悸", "心慌", 0.95), ("心悸", "心跳快", 0.9),
+        ("恶心", "想吐", 0.95), ("恶心", "反胃", 0.9),
+        ("皮疹", "起疹子", 0.95), ("皮疹", "红斑", 0.9), ("皮疹", "荨麻疹", 0.85),
+        ("视力模糊", "看不清", 0.95), ("视力模糊", "视力下降", 0.9),
+        ("鼻塞", "鼻子不通", 0.95), ("鼻塞", "流鼻涕", 0.9),
+        ("抽搐", "抽筋", 0.9), ("抽搐", "痉挛", 0.85),
+        ("口眼歪斜", "面瘫", 0.95), ("口眼歪斜", "嘴巴歪", 0.9),
+    ]
+    syn_count = 0
+    for sname, term, weight in synonym_list:
+        if sname in symptoms and term in symptoms:
+            # map sname back through symptoms to get the real symptom ID (the term also in symptoms means it's also a symptom name, skip)
+            pass
+        if sname in symptoms:
+            db.add(SymptomSynonym(symptom_id=symptoms[sname], term=term, weight=weight))
+            syn_count += 1
+    print(f"症状同义词: {syn_count} 条")
+
+    # ========== 易于混淆疾病对 ==========
+    confuser_list = [
+        ("普通感冒", "流感", ["发热", "头痛", "乏力", "肌肉痛"]),         # 头痛+肌肉痛区分
+        ("普通感冒", "肺炎", ["呼吸困难", "胸痛", "咳痰"]),                # 呼吸困难区分
+        ("流感", "肺炎", ["呼吸困难", "胸痛", "咳痰"]),                    # 胸痛+呼吸困难区分
+        ("支气管炎", "肺炎", ["发热", "呼吸困难"]),                        # 呼吸困难区分
+        ("胃炎", "消化性溃疡", ["便血", "呕血", "夜间痛"]),                # 便血区分
+        ("胃炎", "急性胃肠炎", ["腹泻", "发热"]),                          # 腹泻区分
+        ("高血压", "冠心病", ["胸痛", "心悸"]),                            # 胸痛区分
+        ("偏头痛", "脑膜炎", ["发热", "颈部僵硬", "意识障碍"]),            # 颈部僵硬区分
+        ("脑卒中", "脑膜炎", ["口眼歪斜", "言语不清", "颈部僵硬"]),        # 口眼歪斜区分
+        ("湿疹", "荨麻疹", ["瘙痒", "皮疹形态"]),                          # 皮疹形态区分
+        ("骨关节炎", "腰椎间盘突出", ["腰痛", "肢体麻木"]),                # 腰痛区分
+        ("糖尿病", "甲状腺功能亢进", ["多饮", "心悸", "消瘦"]),            # 多饮区分
+        ("扁桃体炎", "鼻窦炎", ["咽痛", "鼻塞", "面部压痛"]),              # 面部压痛区分
+        ("中耳炎", "鼻窦炎", ["耳痛", "鼻塞", "面部压痛"]),                # 耳痛区分
+    ]
+    conf_count = 0
+    for da_name, db_name, ds_names in confuser_list:
+        if da_name not in diseases or db_name not in diseases:
+            continue
+        ds_ids = [symptoms[s] for s in ds_names if s in symptoms]
+        if not ds_ids:
+            continue
+        db.add(DiseaseConfuser(
+            disease_a_id=diseases[da_name],
+            disease_b_id=diseases[db_name],
+            distinguishing_symptom_ids=ds_ids,
+        ))
+        conf_count += 1
+    print(f"疾病混淆对: {conf_count} 条")
+
+    # ========== 标记鉴别性症状 ==========
+    discriminative_assocs = [
+        # 症状名, 疾病名 -> 标记为鉴别症状
+        ("呼吸困难", "肺炎"), ("呼吸困难", "哮喘"), ("呼吸困难", "慢性阻塞性肺疾病"),
+        ("胸痛", "冠心病"), ("胸痛", "心肌炎"),
+        ("口眼歪斜", "脑卒中"), ("口眼歪斜", "面神经麻痹"),
+        ("颈部僵硬", "脑膜炎"),
+        ("便血", "消化性溃疡"), ("呕血", "消化性溃疡"),
+        ("黄疸", "胆囊炎"), ("黄疸", "肝硬化"),
+        ("抽搐", "脑膜炎"), ("抽搐", "脑卒中"),
+        ("言语不清", "脑卒中"),
+        ("心悸", "心律失常"), ("心悸", "甲状腺功能亢进"),
+        ("多饮", "糖尿病"), ("多尿", "糖尿病"),
+        ("畏光", "偏头痛"),
+        ("耳痛", "中耳炎"),
+        ("腰痛", "腰椎间盘突出"),
+        ("腹泻", "急性胃肠炎"),
+        ("肌肉痛", "流感"),
+        ("关节肿胀", "骨关节炎"),
+        ("面部压痛", "鼻窦炎"),
+    ]
+    disc_count = 0
+    for sn, dn in discriminative_assocs:
+        if sn in symptoms and dn in diseases:
+            assoc = db.query(SymptomDisease).filter(
+                SymptomDisease.symptom_id == symptoms[sn],
+                SymptomDisease.disease_id == diseases[dn],
+            ).first()
+            if assoc:
+                assoc.is_discriminative = True
+                disc_count += 1
+    print(f"鉴别性症状标记: {disc_count} 条")
 
     db.commit()
     db.close()

@@ -9,6 +9,8 @@ from app.models.doctor import Doctor
 from app.models.registration import Registration
 from app.models.diagnosis_feedback import DiagnosisFeedback
 from app.models.user import User
+from app.models.symptom_synonym import SymptomSynonym
+from app.models.disease_confuser import DiseaseConfuser
 
 __all__ = [
     "SymptomDict",
@@ -22,4 +24,6 @@ __all__ = [
     "Registration",
     "DiagnosisFeedback",
     "User",
+    "SymptomSynonym",
+    "DiseaseConfuser",
 ]
