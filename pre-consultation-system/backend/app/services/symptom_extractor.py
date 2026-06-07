@@ -14,12 +14,13 @@ def _load_bert():
     if _model is not None:
         return True
     try:
+        os.environ.setdefault("HF_ENDPOINT", "https://hf-mirror.com")
         from transformers import AutoTokenizer, AutoModelForTokenClassification
         import torch
         model_name = "shibing624/bert4ner-base-chinese"
-        logger.info("加载 BERT NER 模型 %s ...", model_name)
-        _tokenizer = AutoTokenizer.from_pretrained(model_name)
-        _model = AutoModelForTokenClassification.from_pretrained(model_name)
+        logger.info("加载 BERT NER 模型 %s (hf-mirror) ...", model_name)
+        _tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
+        _model = AutoModelForTokenClassification.from_pretrained(model_name, trust_remote_code=True)
         if hasattr(_model, "config") and hasattr(_model.config, "id2label"):
             _ner_labels = {v: k for k, v in _model.config.label2id.items()}
         logger.info("BERT NER 模型加载完成")
@@ -68,46 +69,15 @@ def _bert_predict(text: str) -> list[tuple[str, str]]:
 def extract_bert(text: str) -> list[dict]:
     """
     BERT NER 提取症状实体。
-    使用 shibing624/bert4ner-base-chinese，从自由文本中识别医学实体，
-    再映射到症状字典。
+    当前 shibing624/bert4ner-base-chinese 为通用 NER 模型(ORG/LOC/PER/TIME)，
+    未训练医学症状标签。本函数兜底使用关键词/别名/同义词匹配。
+    后续可替换为 CBLUE/CMeEE 医学 NER 模型或 fine-tune。
     """
-    if not _load_bert():
-        return []
-
-    try:
-        entities = _bert_predict(text)
-    except Exception as e:
-        logger.warning("BERT 预测失败: %s", e)
-        return []
-
-    if not entities:
-        return []
-
     db = None
     try:
         from app.database import SessionLocal
         db = SessionLocal()
-        symptoms = {s.name: s for s in db.query(SymptomDict).all()}
-
-        results: dict[int, dict] = {}
-        for entity_text, label in entities:
-            entity_text = entity_text.strip()
-            if not entity_text or len(entity_text) < 2:
-                continue
-            for name, sym in symptoms.items():
-                if name in entity_text or entity_text in name:
-                    if sym.id not in results:
-                        results[sym.id] = {
-                            "symptom_id": sym.id,
-                            "symptom_name": sym.name,
-                            "match_type": "bert_ner",
-                            "confidence": 0.85,
-                        }
-                    break
-        return list(results.values())
-    except Exception as e:
-        logger.warning("BERT 症状映射失败: %s", e)
-        return []
+        return match_keywords(text, db)
     finally:
         if db:
             db.close()

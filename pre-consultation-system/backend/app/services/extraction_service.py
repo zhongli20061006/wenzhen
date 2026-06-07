@@ -7,24 +7,20 @@ from app.logger import logger
 def extract_symptoms(text: str, db: Session) -> list[dict]:
     """
     统一症状提取入口。
-    按 AI_MODE 选择：
-    - degrade: 仅关键词匹配
-    - bert: BERT NER 优先，降级到关键词
-    - full: BERT NER 优先，降级到关键词（DeepSeek 在后续阶段使用）
+    degrade 模式: 关键词/别名/同义词匹配
+    bert/full: 同上（当前通用NER模型不含医学标签，后续可替换医学NER模型）
     """
-    if settings.AI_MODE in ("degrade", "bert", "full"):
-        logger.debug("症状提取模式: %s", settings.AI_MODE)
-    else:
-        logger.warning("未知 AI_MODE=%s，使用 degrade", settings.AI_MODE)
+    mode = settings.AI_MODE or "degrade"
+    logger.debug("症状提取模式: %s", mode)
 
-    if settings.AI_MODE == "degrade":
+    if mode == "degrade":
         return match_keywords(text, db)
 
     bert_results = extract_bert(text)
     if bert_results:
         logger.debug("BERT NER 提取到 %d 个症状", len(bert_results))
         return bert_results
-    logger.debug("BERT 未启用或无结果，降级到关键词匹配")
+    logger.debug("BERT 无结果，降级到关键词匹配")
     return match_keywords(text, db)
 
 
