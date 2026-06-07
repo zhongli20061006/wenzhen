@@ -59,6 +59,7 @@
         <div class="messages" ref="msgRef">
           <div v-for="(msg, i) in store.messages" :key="i" :class="['msg', msg.role]">
             <div class="bubble">{{ msg.text }}</div>
+            <div v-if="msg.reasoning" class="reasoning">AI 追问理由：{{ msg.reasoning }}</div>
             <div v-if="msg.role === 'system' && msg.symptom_id" class="actions">
               <el-button size="small" @click="handleAnswer(msg.symptom_id, 'YES')" :disabled="answering">有</el-button>
               <el-button size="small" @click="handleAnswer(msg.symptom_id, 'NO')" :disabled="answering">没有</el-button>
@@ -174,5 +175,6 @@ watch(() => store.messages.length, () => {
 .msg.user .bubble { background: #409eff; color: #fff; }
 .msg.user .bubble.thinking { background: #e8e8e8; color: #999; }
 .actions { margin-top: 8px; display: flex; gap: 8px; }
+.reasoning { font-size: 12px; color: #909399; margin-top: 4px; padding-left: 4px; font-style: italic; }
 .result-section { margin-top: 16px; padding: 16px 0; }
 </style>

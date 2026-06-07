@@ -107,7 +107,7 @@ async def _call(user_prompt: str) -> dict:
         {"role": "user", "content": user_prompt},
     ]
     body = {
-        "model": "deepseek-chat",
+        "model": "v4flash",
         "messages": messages,
         "temperature": 0.3,
         "max_tokens": 1500,
@@ -147,7 +147,7 @@ async def stream_call(user_prompt: str) -> AsyncGenerator[str, None]:
         {"role": "user", "content": user_prompt},
     ]
     body = {
-        "model": "deepseek-chat",
+        "model": "v4flash",
         "messages": messages,
         "temperature": 0.3,
         "max_tokens": 1500,
@@ -177,6 +177,55 @@ async def stream_call(user_prompt: str) -> AsyncGenerator[str, None]:
     except Exception as e:
         logger.error("DeepSeek 流式请求失败: %s", e)
         yield json.dumps({"error": "stream_failed", "detail": str(e)[:200]})
+
+
+async def suggest_next_question(
+    confirmed_symptoms: list[str],
+    denied_symptoms: list[str],
+    candidates: list[dict],
+    asked_symptoms: list[str],
+    collected_data: dict = None,
+) -> dict:
+    if not is_available():
+        return {"symptom_name": "", "reasoning": "", "matched": False}
+
+    confirmed_text = "、".join(confirmed_symptoms) if confirmed_symptoms else "（无）"
+    denied_text = "、".join(denied_symptoms) if denied_symptoms else "（无）"
+    asked_text = "、".join(asked_symptoms) if asked_symptoms else "（无）"
+
+    candidate_text = "\n".join(
+        f"- {c['disease_name']} (得分: {c['score']:.3f}, 科室: {c.get('department_name','')})"
+        for c in candidates[:10]
+    )
+
+    extra = ""
+    if collected_data:
+        sev = collected_data.get("severity")
+        dur = collected_data.get("onset_days")
+        if sev:
+            extra += f" 严重程度: {sev}/10。"
+        if dur is not None:
+            extra += f" 病程: {dur}天。"
+
+    user_prompt = f"""你是医疗预问诊系统的AI决策助手。
+
+患者已确认的症状：{confirmed_text}
+患者否认的症状：{denied_text}
+已经问过的症状：{asked_text}
+当前候选疾病及得分：
+{candidate_text}
+{extra}
+
+请从候选疾病的关联症状中，选出下一个最值得追问的症状。选择标准：
+1. 能最高效地区分TOP候选疾病（鉴别力强）
+2. 不能是已确认、已否认或已问过的症状
+3. 考虑严重程度和病程的紧迫性
+4. 优先选择必要条件(is_required)或鉴别标志(is_discriminative)的症状
+
+返回JSON（不要其他文字）：
+{{"symptom_name": "症状名", "reasoning": "选择该症状的理由（含疾病区分逻辑，50字以内）"}}"""
+
+    return await _call(user_prompt)
 
 
 async def health_check() -> dict:

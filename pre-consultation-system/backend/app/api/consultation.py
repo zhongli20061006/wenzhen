@@ -31,7 +31,7 @@ from app.services.reasoning_engine import (
     generate_recommendation,
 )
 from app.services.final_scorer import fuse_scores, degrade_only
-from app.services.deepseek_client import is_available, rank_diseases
+from app.services.deepseek_client import is_available, rank_diseases, suggest_next_question
 
 router = APIRouter(dependencies=[Depends(get_current_user)])
 
@@ -57,6 +57,36 @@ async def _fuse_candidates(candidates: list[dict], collected_data: dict) -> list
         "department_name": m["department_name"],
         "urgency": m["urgency"],
     } for m in fusion["merged"]]
+
+
+async def _select_next_symptom(
+    candidates: list[dict],
+    collected_data: dict,
+    asked_symptoms: list[str],
+    db: Session,
+) -> dict | None:
+    """选择下一个追问症状：优先 DeepSeek 推理，不可用或未命中则回退规则引擎"""
+    rule_result = select_next_symptom(candidates, asked_symptoms, db)
+
+    if is_available():
+        confirmed = [k for k, v in collected_data.get("symptoms", {}).items() if v is True]
+        denied = [k for k, v in collected_data.get("symptoms", {}).items() if v is False]
+        ds = await suggest_next_question(confirmed, denied, candidates, asked_symptoms, collected_data)
+        ds_name = ds.get("symptom_name", "").strip()
+        # Try to match DeepSeek's suggestion to a symptom in the DB
+        if ds_name:
+            sym = db.query(SymptomDict).filter(SymptomDict.name == ds_name).first()
+            if not sym:
+                sym = db.query(SymptomDict).filter(SymptomDict.aliases.like(f"%{ds_name}%")).first()
+            if sym:
+                return {
+                    "symptom_id": sym.id,
+                    "symptom_name": sym.name,
+                    "ds_reasoning": ds.get("reasoning", ""),
+                }
+        logger.debug("DeepSeek 追问建议未命中: %s, 回退规则引擎", ds_name)
+
+    return rule_result
 
 
 @router.post("/start")
@@ -129,7 +159,7 @@ async def start_consultation(req: StartConsultationRequest, current_user: dict =
     db.add(session)
     db.commit()
 
-    next_symptom = select_next_symptom(candidates, symptom_names, db)
+    next_symptom = await _select_next_symptom(candidates, collected_data, symptom_names, db)
     if next_symptom:
         session.current_round = 1
         question_text = _build_question_text(next_symptom["symptom_name"])
@@ -142,7 +172,7 @@ async def start_consultation(req: StartConsultationRequest, current_user: dict =
         db.add(record)
         db.commit()
 
-        return {
+        resp = {
             "consultation_id": session_id,
             "question_id": record.id,
             "question_text": question_text,
@@ -150,6 +180,9 @@ async def start_consultation(req: StartConsultationRequest, current_user: dict =
             "round": 1,
             "total_rounds": settings.MAX_QUESTION_ROUNDS,
         }
+        if next_symptom.get("ds_reasoning"):
+            resp["ds_reasoning"] = next_symptom["ds_reasoning"]
+        return resp
 
     session.status = SessionStatus.RECOMMENDING
     result = generate_recommendation(candidates, collected_data)
@@ -233,7 +266,7 @@ async def answer_question(consultation_id: str, req: AnswerRequest, db: Session 
         }
 
     session.current_round += 1
-    next_symptom = select_next_symptom(candidates, asked, db)
+    next_symptom = await _select_next_symptom(candidates, collected, asked, db)
 
     if not next_symptom:
         session.status = SessionStatus.RECOMMENDING
@@ -259,7 +292,7 @@ async def answer_question(consultation_id: str, req: AnswerRequest, db: Session 
     db.commit()
 
     logger.info("追问下一轮 session=%s, round=%d, symptom=%s", consultation_id, session.current_round, next_symptom["symptom_name"])
-    return {
+    resp = {
         "status": "QUESTIONING",
         "question_id": new_record.id,
         "question_text": question_text,
@@ -267,6 +300,9 @@ async def answer_question(consultation_id: str, req: AnswerRequest, db: Session 
         "round": session.current_round,
         "total_rounds": settings.MAX_QUESTION_ROUNDS,
     }
+    if next_symptom.get("ds_reasoning"):
+        resp["ds_reasoning"] = next_symptom["ds_reasoning"]
+    return resp
 
 
 @router.get("/{consultation_id}/result")
@@ -483,9 +519,6 @@ async def pipeline_debug(req: StartConsultationRequest, current_user: dict = Dep
 
     result = generate_recommendation(candidates, collected_data)
     stages["recommendation"] = result
-
-    from app.services.final_scorer import fuse_scores, degrade_only
-    from app.services.deepseek_client import is_available, rank_diseases
 
     if is_available():
         ds_result = await rank_diseases(symptom_names, candidates, collected_data)
