@@ -399,7 +399,7 @@ def available_timeslots(doctor_id: int, registration_date: str, db: Session = De
 
 
 @router.post("/pipeline-debug")
-def pipeline_debug(req: StartConsultationRequest, current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
+async def pipeline_debug(req: StartConsultationRequest, current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
     """
     降解模式全流程调试端点。返回管道的每一步结果。
     """
@@ -460,6 +460,27 @@ def pipeline_debug(req: StartConsultationRequest, current_user: dict = Depends(g
 
     result = generate_recommendation(candidates, collected_data)
     stages["recommendation"] = result
+
+    from app.services.final_scorer import fuse_scores, degrade_only
+    from app.services.deepseek_client import is_available, rank_diseases
+
+    if is_available():
+        ds_result = await rank_diseases(symptom_names, candidates, collected_data)
+        ds_rankings = ds_result.get("rankings", [])
+        ds_ok = "error" not in ds_result
+        stages["deepseek_raw"] = {"success": ds_ok, "explanation": ds_result.get("explanation", "")}
+        fusion = fuse_scores(candidates, ds_rankings)
+    else:
+        fusion = degrade_only(candidates)
+    stages["final_scorer"] = {
+        "mode": fusion.get("mode", "fused"),
+        "agreement": fusion["agreement"],
+        "conflicts": fusion["conflicts"][:3],
+        "merged": [
+            {"name": m["disease_name"], "rule": m["rule_score"], "ds": m["ds_score"], "final": m["final_score"]}
+            for m in fusion["merged"][:10]
+        ],
+    }
 
     return stages
 
