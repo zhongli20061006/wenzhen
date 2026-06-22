@@ -1,0 +1,97 @@
+=== All Symptoms ===
+  id=  1  name='发热'  aliases='低热,体温升高,发烧,烧,高热'
+  id=  2  name='咳嗽'  aliases='呛咳,咳痰,干咳,阵咳'
+  id=  3  name='咳痰'  aliases='泡沫痰,痰多,白痰,黄痰'
+  id=  4  name='呼吸困难'  aliases='呼吸不畅,喘不上气,气促,气短'
+  id=  5  name='胸痛'  aliases='胸口痛,胸闷,胸骨后痛'
+  id=  6  name='心悸'  aliases='心慌,心跳不齐,心跳快'
+  id=  7  name='头痛'  aliases='偏头痛,前额痛,后脑痛,头疼'
+  id=  8  name='头晕'  aliases='天旋地转,头昏,眩晕'
+  id=  9  name='恶心'  aliases='反胃,想吐'
+  id= 10  name='呕吐'  aliases='吐,喷射性呕吐,干呕'
+  id= 11  name='腹痛'  aliases='绞痛,肚子疼,肚子痛,胃痛,腹部不适'
+  id= 12  name='腹泻'  aliases='大便次数多,拉肚子,水样便'
+  id= 13  name='便秘'  aliases='大便不畅,大便干结,排便困难'
+  id= 14  name='腹胀'  aliases='肚子胀,胃胀,腹部胀满'
+  id= 15  name='食欲不振'  aliases='不想吃饭,厌食,没胃口'
+  id= 16  name='体重下降'  aliases='体重下降,体重减轻,消瘦,瘦了'
+  id= 17  name='乏力'  aliases='没力气,浑身没劲,疲乏,疲劳'
+  id= 18  name='关节痛'  aliases='关节疼,关节肿痛,膝盖痛'
+  id= 19  name='腰痛'  aliases='腰疼,腰肌痛,腰部不适,腰酸'
+  id= 20  name='皮疹'  aliases='丘疹,出疹子,红斑,红疹,荨麻疹'
+  id= 21  name='瘙痒'  aliases='全身痒,特别痒,痒,皮肤痒'
+  id= 22  name='视力模糊'  aliases='看不清,视力下降,视物模糊'
+  id= 23  name='耳鸣'  aliases='听力下降,嗡嗡声,耳朵响'
+  id= 24  name='鼻塞'  aliases='呼吸不畅,流鼻涕,鼻堵,鼻子不通,鼻子不通气,鼻子堵'
+  id= 25  name='咽痛'  aliases='吞咽痛,咽喉痛,喉咙疼,喉咙痛,嗓子不舒服,嗓子疼,嗓子痛'
+  id= 26  name='月经不调'  aliases='月经紊乱,月经量少,经期不规律'
+  id= 27  name='阴道出血'  aliases='不规则出血,接触性出血'
+  id= 28  name='尿频'  aliases='小便次数多,尿多,排尿频繁'
+  id= 29  name='尿痛'  aliases='小便痛,尿道刺痛,排尿痛'
+  id= 30  name='水肿'  aliases='下肢肿,全身肿,浮肿,眼睑肿'
+  id= 31  name='抽搐'  aliases='四肢抽动,惊厥,抽筋,痉挛'
+  id= 32  name='意识障碍'  aliases='反应迟钝,嗜睡,意识不清,昏迷'
+  id= 33  name='肢体麻木'  aliases='半身麻木,手脚麻,舌麻,面麻'
+  id= 34  name='口眼歪斜'  aliases='嘴巴歪,嘴角下垂,眼斜,面瘫'
+  id= 35  name='言语不清'  aliases='口齿不清,失语,说话不利索'
+  id= 36  name='吞咽困难'  aliases='吞咽哽咽,咽不下东西'
+  id= 37  name='便血'  aliases='大便带血,血便,黑便'
+  id= 38  name='呕血'  aliases='吐血,呕吐物带血'
+  id= 39  name='黄疸'  aliases='小便黄,皮肤发黄,眼睛黄'
+  id= 40  name='多饮'  aliases='口渴,喜欢喝水,饮水量大'
+  id= 41  name='多尿'  aliases='夜尿多,尿量多,尿频量多'
+  id= 42  name='多食'  aliases='吃得多,容易饿,食量大'
+  id= 43  name='背痛'  aliases='后背痛,肩背痛,背疼'
+  id= 44  name='颈部僵硬'  aliases='脖子硬,颈椎痛,颈痛'
+  id= 45  name='畏光'  aliases='怕光,怕见光,遇光不适'
+  id= 46  name='流泪'  aliases='泪多,流眼泪,迎风流泪'
+  id= 47  name='打喷嚏'  aliases='喷嚏,打喷涕,打嚏喷,连续喷嚏,鼻痒喷嚏'
+  id= 48  name='流鼻涕'  aliases='流涕,流清涕,流黄涕,清涕,鼻水,鼻涕'
+  id= 49  name='夜间盗汗'  aliases='夜间出汗,睡觉出汗,醒后汗止'
+  id= 50  name='淋巴结肿大'  aliases='淋巴肿大,腋下肿块,颈部结节'
+  id= 51  name='口腔溃疡'  aliases='口疮,口腔糜烂,嘴破'
+  id= 52  name='牙痛'  aliases='牙疼,牙髓痛,牙龈痛'
+  id= 53  name='颈部肿块'  aliases='甲状腺肿,脖子粗,颈部包块'
+  id= 54  name='心悸气短'  aliases='劳力性气短,活动后心慌'
+  id= 55  name='肩痛'  aliases='抬肩困难,肩周痛,肩膀痛'
+  id= 56  name='肌肉痛'  aliases='全身酸痛,浑身疼,肌痛,肌肉酸痛'
+  id= 57  name='胸闷'  aliases='憋气,胸口不舒服,胸口闷,胸部压迫感,胸闷气短'
+  id= 58  name='耳痛'  aliases='耳内痛,耳朵疼,耳根痛'
+  id= 59  name='关节肿胀'  aliases='关节红肿,关节肿,膝盖肿'
+  id= 60  name='面部压痛'  aliases='脸颊痛,面痛,面部按压痛'
+  id= 61  name='耳后痛'  aliases='耳后压痛,耳根后痛'
+  id= 62  name='扭伤'  aliases='关节扭伤,崴脚,扭了,拉伤,脚踝扭伤'
+  id= 63  name='肿胀'  aliases='局部肿胀,红肿,肿,肿了,肿得很厉害'
+  id= 64  name='瘀斑'  aliases='淤青,瘀血,皮下出血,青紫'
+  id= 65  name='活动受限'  aliases='不能动,僵硬,动不了,活动困难'
+  id= 66  name='腿部疼痛'  aliases='下肢疼痛,小腿疼,腿疼,腿痛'
+  id= 67  name='脚部疼痛'  aliases='脚疼,脚痛,足痛,足部疼痛'
+  id= 68  name='喉咙痛'  aliases='咽喉疼,喉咙疼,嗓子不舒服,嗓子疼'
+  id= 69  name='反酸'  aliases='泛酸,烧心,胃酸,胃酸过多'
+  id= 70  name='打嗝'  aliases='呃逆,嗝气,嗳气'
+  id= 71  name='失眠'  aliases='入睡困难,早醒,睡不好,睡不着'
+  id= 72  name='焦虑'  aliases='心慌不安,担心,紧张不安'
+  id= 73  name='记忆力下降'  aliases='健忘,记不住事,记性差'
+  id= 74  name='出汗异常'  aliases='冷汗,多汗,盗汗,自汗'
+  id= 75  name='寒战'  aliases='发冷,怕冷发抖,打冷战'
+  id= 76  name='口干'  aliases='口干舌燥,口舌干燥,嘴干'
+
+=== T5 ===
+Text: 手臂上起了很多红疹，特别痒。有好几天了，擦了皮炎平也没用。
+Extracted: ['皮疹', '瘙痒']
+Expected:  ['红疹', '瘙痒']
+RESULT: FAIL
+
+=== T6 ===
+Text: 我最近一个月瘦了10斤，总是口渴想喝水
+Extracted: ['体重下降', '多饮']
+Expected:  ['体重下降', '多饮']
+RESULT: PASS
+
+=== T5 Keyword Debug ===
+  kw: name='皮疹' type=alias_exact conf=0.95
+  kw: name='瘙痒' type=alias_exact conf=0.95
+
+DB lookup '瘙痒': FOUND id=21 aliases=全身痒,特别痒,痒,皮肤痒
+
+DB lookup '体重下降': FOUND id=16 aliases=体重下降,体重减轻,消瘦,瘦了

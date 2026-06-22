@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Node
+node_modules/
+dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Environment
+.env
+*.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Model outputs (keep source scripts, exclude binaries and generated data)
+pre-consultation-system/backend/model/output/
+pre-consultation-system/backend/model/data/
+pre-consultation-system/backend/model/__pycache__/
+*.safetensors
+
+# Tool-specific
+.omo/
+.reasonix/
+reasonix.toml
+
+# Build artifacts
+pre-consultation-system/frontend/dist/

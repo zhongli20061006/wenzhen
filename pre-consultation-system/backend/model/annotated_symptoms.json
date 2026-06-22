@@ -1,0 +1,4797 @@
+[
+  {
+    "text": "我最近一直发烧，喉咙还是挺痛的，有点咳痰，鼻涕流个不停，清鼻涕。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 8,
+        "entity": "发热"
+      },
+      {
+        "start_idx": 13,
+        "end_idx": 15,
+        "entity": "咽痛"
+      },
+      {
+        "start_idx": 20,
+        "end_idx": 22,
+        "entity": "咳痰"
+      },
+      {
+        "start_idx": 24,
+        "end_idx": 27,
+        "entity": "流鼻涕"
+      }
+    ]
+  },
+  {
+    "text": "肚子胀得很，比较胀，有点反酸想呕但呕不出，有时候会痛一下。",
+    "entities": [
+      {
+        "start_idx": 1,
+        "end_idx": 3,
+        "entity": "腹胀"
+      },
+      {
+        "start_idx": 12,
+        "end_idx": 14,
+        "entity": "恶心"
+      },
+      {
+        "start_idx": 20,
+        "end_idx": 22,
+        "entity": "腹痛"
+      }
+    ]
+  },
+  {
+    "text": "脚崴了，很痛，痛的厉害，肿起来了。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 7,
+        "entity": "关节痛"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 15,
+        "entity": "关节肿胀"
+      }
+    ]
+  },
+  {
+    "text": "娃儿高烧不退一直发烧，还咳嗽流鼻涕，头疼得厉害，发高烧快1天了。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 5,
+        "entity": "发热"
+      },
+      {
+        "start_idx": 8,
+        "end_idx": 10,
+        "entity": "发热"
+      },
+      {
+        "start_idx": 12,
+        "end_idx": 14,
+        "entity": "咳嗽"
+      },
+      {
+        "start_idx": 15,
+        "end_idx": 18,
+        "entity": "流鼻涕"
+      },
+      {
+        "start_idx": 19,
+        "end_idx": 21,
+        "entity": "头痛"
+      }
+    ]
+  },
+  {
+    "text": "最近老喘不上气，干咳，咳得严重会有血丝，身体使不上力。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 7,
+        "entity": "呼吸困难"
+      },
+      {
+        "start_idx": 9,
+        "end_idx": 11,
+        "entity": "咳嗽"
+      },
+      {
+        "start_idx": 13,
+        "end_idx": 14,
+        "entity": "咳痰"
+      },
+      {
+        "start_idx": 22,
+        "end_idx": 24,
+        "entity": "乏力"
+      }
+    ]
+  },
+  {
+    "text": "肚子痛，大便有像油一样的漂浮物，胃隐痛，身体有点无力。",
+    "entities": [
+      {
+        "start_idx": 1,
+        "end_idx": 3,
+        "entity": "腹痛"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 18,
+        "entity": "腹痛"
+      },
+      {
+        "start_idx": 23,
+        "end_idx": 25,
+        "entity": "乏力"
+      }
+    ]
+  },
+  {
+    "text": "最近这一个月吧，动不动就胸口闷得慌，有时候心跳突然就怦怦的，快得要命，躺下更难受，爬起来坐一会儿才好。",
+    "entities": [
+      {
+        "start_idx": 16,
+        "end_idx": 18,
+        "entity": "胸闷"
+      },
+      {
+        "start_idx": 27,
+        "end_idx": 29,
+        "entity": "心悸"
+      },
+      {
+        "start_idx": 44,
+        "end_idx": 46,
+        "entity": "呼吸困难"
+      }
+    ]
+  },
+  {
+    "text": "我头疼了有个把星期了，后脑勺这一块儿特别疼，而且右边眼睛看东西有点模糊，有时候还觉得天旋地转的。",
+    "entities": [
+      {
+        "start_idx": 1,
+        "end_idx": 3,
+        "entity": "头痛"
+      },
+      {
+        "start_idx": 21,
+        "end_idx": 25,
+        "entity": "视力模糊"
+      },
+      {
+        "start_idx": 35,
+        "end_idx": 37,
+        "entity": "头晕"
+      }
+    ]
+  },
+  {
+    "text": "两个胳膊肘那儿出了好多红点点，痒得受不了，越抓越厉害，用了皮炎平也没用。",
+    "entities": [
+      {
+        "start_idx": 11,
+        "end_idx": 13,
+        "entity": "皮疹"
+      },
+      {
+        "start_idx": 15,
+        "end_idx": 16,
+        "entity": "瘙痒"
+      }
+    ]
+  },
+  {
+    "text": "眼睛干得要命，像进了沙子一样磨得慌，怕光，一到太阳底下就睁不开，有时候还会流眼泪，但不是哭那种哈。",
+    "entities": [
+      {
+        "start_idx": 22,
+        "end_idx": 24,
+        "entity": "畏光"
+      },
+      {
+        "start_idx": 35,
+        "end_idx": 37,
+        "entity": "流泪"
+      }
+    ]
+  },
+  {
+    "text": "鼻子不通气都快两周了，黄鼻涕一直流，清鼻涕和黄鼻涕交替来，额头这一块儿压着有点疼。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 5,
+        "entity": "鼻塞"
+      },
+      {
+        "start_idx": 10,
+        "end_idx": 13,
+        "entity": "流鼻涕"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 16,
+        "entity": "流鼻涕"
+      },
+      {
+        "start_idx": 38,
+        "end_idx": 40,
+        "entity": "头痛"
+      },
+      {
+        "start_idx": 48,
+        "end_idx": 51,
+        "entity": "面部压痛"
+      }
+    ]
+  },
+  {
+    "text": "左边下面那颗牙疼了三天了，一吃东西碰到就钻心的疼，半边脸都跟着肿了。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 8,
+        "entity": "牙痛"
+      }
+    ]
+  },
+  {
+    "text": "这段时间老是口干想喝水，一天能喝好几暖壶，上厕所也特别频繁，尤其晚上得起夜三四次，人还瘦了。",
+    "entities": [
+      {
+        "start_idx": 13,
+        "end_idx": 15,
+        "entity": "多饮"
+      },
+      {
+        "start_idx": 23,
+        "end_idx": 25,
+        "entity": "多尿"
+      },
+      {
+        "start_idx": 45,
+        "end_idx": 47,
+        "entity": "消瘦"
+      }
+    ]
+  },
+  {
+    "text": "大姨妈这两个月都不正常了，有时候拖好久不来，来了量又特别少，肚子还隐隐作痛。",
+    "entities": [
+      {
+        "start_idx": 1,
+        "end_idx": 5,
+        "entity": "月经不调"
+      },
+      {
+        "start_idx": 29,
+        "end_idx": 31,
+        "entity": "腹痛"
+      }
+    ]
+  },
+  {
+    "text": "发烧烧到快39度了，喝了退烧药也不管用，全身没劲儿，肌肉酸得像被打了一顿。",
+    "entities": [
+      {
+        "start_idx": 1,
+        "end_idx": 3,
+        "entity": "发热"
+      },
+      {
+        "start_idx": 20,
+        "end_idx": 22,
+        "entity": "乏力"
+      },
+      {
+        "start_idx": 24,
+        "end_idx": 27,
+        "entity": "肌肉痛"
+      }
+    ]
+  },
+  {
+    "text": "腰疼了好几个月了，坐久了站起来那一下简直要命，腿有时候还发麻。",
+    "entities": [
+      {
+        "start_idx": 1,
+        "end_idx": 3,
+        "entity": "腰痛"
+      },
+      {
+        "start_idx": 24,
+        "end_idx": 28,
+        "entity": "肢体麻木"
+      }
+    ]
+  },
+  {
+    "text": "昨天半夜开始拉肚子，肚子一阵一阵的绞痛，拉的都是稀的，到早上拉了四五趟了。",
+    "entities": [
+      {
+        "start_idx": 7,
+        "end_idx": 10,
+        "entity": "腹泻"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 18,
+        "entity": "腹痛"
+      }
+    ]
+  },
+  {
+    "text": "嗓子疼了三天，吞口水都跟吞刀片似的，还一直干咳，咳得胸口有点闷。",
+    "entities": [
+      {
+        "start_idx": 1,
+        "end_idx": 3,
+        "entity": "咽痛"
+      },
+      {
+        "start_idx": 17,
+        "end_idx": 19,
+        "entity": "咳嗽"
+      },
+      {
+        "start_idx": 24,
+        "end_idx": 26,
+        "entity": "胸闷"
+      }
+    ]
+  },
+  {
+    "text": "腰那块儿突然开始疼，疼得我冷汗都下来了，感觉想尿尿但是又尿不出来多少，尿的时候有点刺痛。",
+    "entities": [
+      {
+        "start_idx": 1,
+        "end_idx": 3,
+        "entity": "腰痛"
+      },
+      {
+        "start_idx": 28,
+        "end_idx": 30,
+        "entity": "尿频"
+      },
+      {
+        "start_idx": 39,
+        "end_idx": 41,
+        "entity": "尿痛"
+      }
+    ]
+  },
+  {
+    "text": "晚上躺床上翻来覆去睡不着，脑子就一直转，白天整个人蔫蔫的没精神，感觉身体被掏空了。",
+    "entities": [
+      {
+        "start_idx": 25,
+        "end_idx": 27,
+        "entity": "乏力"
+      }
+    ]
+  },
+  {
+    "text": "最近真是哪儿哪儿都不对劲，头也晕，胃口也不好，身上没力气，体重掉了好几斤。",
+    "entities": [
+      {
+        "start_idx": 15,
+        "end_idx": 17,
+        "entity": "头晕"
+      },
+      {
+        "start_idx": 20,
+        "end_idx": 24,
+        "entity": "食欲不振"
+      },
+      {
+        "start_idx": 27,
+        "end_idx": 29,
+        "entity": "乏力"
+      },
+      {
+        "start_idx": 32,
+        "end_idx": 34,
+        "entity": "消瘦"
+      }
+    ]
+  },
+  {
+    "text": "娃儿从昨天下午开始发烧，量了下38度5，脸蛋烧得通红，不怎么吃东西，平时爱喝的奶今天一口都不想碰，晚上睡觉哼哼唧唧的，有时候还抽两下。",
+    "entities": [
+      {
+        "start_idx": 9,
+        "end_idx": 11,
+        "entity": "发热"
+      },
+      {
+        "start_idx": 27,
+        "end_idx": 31,
+        "entity": "食欲不振"
+      },
+      {
+        "start_idx": 61,
+        "end_idx": 63,
+        "entity": "抽搐"
+      }
+    ]
+  },
+  {
+    "text": "拉了三天了，稀得像蛋花汤，黄的带水，一天拉七八趟，屁股都沤红了，精神倒还行，没脱水吧应该？",
+    "entities": [
+      {
+        "start_idx": 1,
+        "end_idx": 3,
+        "entity": "腹泻"
+      }
+    ]
+  },
+  {
+    "text": "咳嗽咳了半个月了，白天还好，一到后半夜就咳，咳咳咳，咳到干呕，喉咙像是有东西糊着，呼噜呼噜的。",
+    "entities": [
+      {
+        "start_idx": 1,
+        "end_idx": 3,
+        "entity": "咳嗽"
+      },
+      {
+        "start_idx": 22,
+        "end_idx": 24,
+        "entity": "咳痰"
+      },
+      {
+        "start_idx": 36,
+        "end_idx": 38,
+        "entity": "咽痛"
+      }
+    ]
+  },
+  {
+    "text": "你看他脖子这一圈，还有胳肢窝底下，起了一片红疹子，痒得他老抓老抓，晚上根本睡不踏实。",
+    "entities": [
+      {
+        "start_idx": 17,
+        "end_idx": 20,
+        "entity": "皮疹"
+      },
+      {
+        "start_idx": 22,
+        "end_idx": 23,
+        "entity": "瘙痒"
+      }
+    ]
+  },
+  {
+    "text": "老师说他在幼儿园老揉眼睛，回家我看也是，眼睛红红的，有眼屎糊着，还有点肿。",
+    "entities": [
+      {
+        "start_idx": 11,
+        "end_idx": 14,
+        "entity": "视力模糊"
+      },
+      {
+        "start_idx": 30,
+        "end_idx": 32,
+        "entity": "流泪"
+      }
+    ]
+  },
+  {
+    "text": "我爸今年72，有高血压好多年了，最近老说胸闷，走两步就喘，上楼梯要歇两三回，晚上睡觉躺不平，得垫两个枕头。",
+    "entities": [
+      {
+        "start_idx": 23,
+        "end_idx": 25,
+        "entity": "胸闷"
+      },
+      {
+        "start_idx": 29,
+        "end_idx": 30,
+        "entity": "呼吸困难"
+      },
+      {
+        "start_idx": 43,
+        "end_idx": 45,
+        "entity": "呼吸困难"
+      }
+    ]
+  },
+  {
+    "text": "我妈血糖高都十几年了，最近老说脚发麻，袜子穿着都嫌勒得慌，脚趾头凉凉的，走路还有点踩棉花的感觉。",
+    "entities": [
+      {
+        "start_idx": 16,
+        "end_idx": 20,
+        "entity": "肢体麻木"
+      }
+    ]
+  },
+  {
+    "text": "就前两天下床没站稳扭了一下，大腿根儿那块疼得不行，站都站不住，以前摔过两次了，这个岁数怕不是骨折了？",
+    "entities": [
+      {
+        "start_idx": 16,
+        "end_idx": 19,
+        "entity": "关节痛"
+      }
+    ]
+  },
+  {
+    "text": "老糊涂了呀最近，昨天吃的啥今天就不记得，钥匙放哪儿到处找，有时候还认岔人，脾气也变得很暴躁。",
+    "entities": [
+      {
+        "start_idx": 42,
+        "end_idx": 46,
+        "entity": "意识障碍"
+      }
+    ]
+  },
+  {
+    "text": "便秘大半个月了，三四天才拉一回，干得像羊粪蛋，上厕所一蹲就是半小时，拉得脸都憋红了。",
+    "entities": [
+      {
+        "start_idx": 1,
+        "end_idx": 3,
+        "entity": "便秘"
+      },
+      {
+        "start_idx": 35,
+        "end_idx": 37,
+        "entity": "腹痛"
+      }
+    ]
+  },
+  {
+    "text": "跟他说话稍微声音小点他就听不见，老打岔，耳朵里还嗡嗡叫，别人说这叫耳鸣？",
+    "entities": [
+      {
+        "start_idx": 22,
+        "end_idx": 24,
+        "entity": "耳鸣"
+      }
+    ]
+  },
+  {
+    "text": "眼睛这几年看东西越来越糊，像隔了层毛玻璃，晚上灯光周围一圈一圈的光晕，针眼都穿不过去了。",
+    "entities": [
+      {
+        "start_idx": 8,
+        "end_idx": 12,
+        "entity": "视力模糊"
+      }
+    ]
+  },
+  {
+    "text": "咳嗽好几天了，一开始是干咳没当回事，现在咳出了黄绿色的浓痰，早上起来最厉害。还发烧38度，浑身肌肉酸痛像被车碾过一样，脑袋沉沉的老想睡觉，鼻子完全堵死了只能用嘴呼吸。",
+    "entities": [
+      {
+        "start_idx": 1,
+        "end_idx": 3,
+        "entity": "咳嗽"
+      },
+      {
+        "start_idx": 32,
+        "end_idx": 34,
+        "entity": "咳痰"
+      },
+      {
+        "start_idx": 50,
+        "end_idx": 52,
+        "entity": "发热"
+      },
+      {
+        "start_idx": 56,
+        "end_idx": 60,
+        "entity": "肌肉痛"
+      },
+      {
+        "start_idx": 73,
+        "end_idx": 75,
+        "entity": "头痛"
+      },
+      {
+        "start_idx": 79,
+        "end_idx": 81,
+        "entity": "乏力"
+      },
+      {
+        "start_idx": 87,
+        "end_idx": 89,
+        "entity": "鼻塞"
+      }
+    ]
+  },
+  {
+    "text": "肚子从早上起来就开始疼，肚脐周围拧着疼，一阵一阵的。从10点到现在拉了四次，稀得像水一样，拉完稍微好点但过一会儿又疼。还有点低烧37度5，没胃口吃东西，闻到油味就想吐。",
+    "entities": [
+      {
+        "start_idx": 14,
+        "end_idx": 16,
+        "entity": "腹痛"
+      },
+      {
+        "start_idx": 36,
+        "end_idx": 38,
+        "entity": "腹泻"
+      },
+      {
+        "start_idx": 67,
+        "end_idx": 69,
+        "entity": "发热"
+      },
+      {
+        "start_idx": 74,
+        "end_idx": 78,
+        "entity": "食欲不振"
+      },
+      {
+        "start_idx": 85,
+        "end_idx": 87,
+        "entity": "恶心"
+      }
+    ]
+  },
+  {
+    "text": "昨晚吃完饭突然右腰背部剧痛，像被刀捅了一样，疼得满头大汗站不起来。后来慢慢缓解了但一直隐隐作痛，上厕所发现尿液发红，有点害怕。之前体检说右肾有个小结石没管。",
+    "entities": [
+      {
+        "start_idx": 7,
+        "end_idx": 11,
+        "entity": "腰痛"
+      },
+      {
+        "start_idx": 47,
+        "end_idx": 49,
+        "entity": "腹痛"
+      },
+      {
+        "start_idx": 60,
+        "end_idx": 64,
+        "entity": "血尿"
+      }
+    ]
+  },
+  {
+    "text": "小腹痛了两天了，中间那一块往下坠着疼，白带比以前多了好多，颜色有点发黄还有点味道，小便时候有点灼烧感。上个月也这样过一次吃了点消炎药好了。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 2,
+        "entity": "腹痛"
+      },
+      {
+        "start_idx": 47,
+        "end_idx": 49,
+        "entity": "尿痛"
+      }
+    ]
+  },
+  {
+    "text": "外公今年78了，最近记性差得离谱，刚吃完饭就问什么时候吃，出门走两条街就找不到回家的路。脾气变得特别暴躁，动不动就发火摔东西，跟换了个人似的，晚上也不怎么睡觉就在屋里走来走去。",
+    "entities": [
+      {
+        "start_idx": 22,
+        "end_idx": 26,
+        "entity": "意识障碍"
+      }
+    ]
+  },
+  {
+    "text": "右膝盖最近一个月老是咯吱咯吱响，上下楼梯疼得厉害，尤其是下楼的时候一步一步往下挪。早上刚起来膝盖僵得很，要活动个十几分钟才能走路。去社区医院拍片子说是骨质增生。",
+    "entities": [
+      {
+        "start_idx": 1,
+        "end_idx": 4,
+        "entity": "关节痛"
+      },
+      {
+        "start_idx": 35,
+        "end_idx": 38,
+        "entity": "晨僵"
+      }
+    ]
+  },
+  {
+    "text": "皮肤痒了快两周了，胳膊肘内侧和膝盖窝一片红，越抓越痒，晚上睡觉都能痒醒，皮都抓破了。擦了药膏能管几个小时又开始了。以前从来没有这种情况不知道是不是过敏。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 3,
+        "entity": "瘙痒"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 16,
+        "entity": "皮疹"
+      }
+    ]
+  },
+  {
+    "text": "左边牙齿最里面那颗智齿疼了四天了，半边脸肿得像个馒头，嘴巴张不开顶多塞进一个手指头。晚上比白天痛得厉害，吃止痛药也就管两个小时。牙龈还出了点脓，嘴里一股怪味。",
+    "entities": [
+      {
+        "start_idx": 8,
+        "end_idx": 10,
+        "entity": "牙痛"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 18,
+        "entity": "面部肿胀"
+      }
+    ]
+  },
+  {
+    "text": "最近两个月月经没有来，之前一直很规律的28天。自己买了验孕棒测了是阴性。体重反而重了六七斤，脸上毛孔粗大长了很多痘痘，下巴也长了一圈小胡子一样的东西。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 9,
+        "entity": "月经不调"
+      },
+      {
+        "start_idx": 54,
+        "end_idx": 56,
+        "entity": "皮疹"
+      },
+      {
+        "start_idx": 59,
+        "end_idx": 61,
+        "entity": "多毛"
+      }
+    ]
+  },
+  {
+    "text": "喉咙痛了三四天了，吞口水像吞玻璃碴，我拿手电一照里面都是白色的小脓点。同时伴有发烧，最高38度3，头疼得太阳穴突突的跳，不想吃东西，全身没劲就想躺着。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 2,
+        "entity": "咽痛"
+      },
+      {
+        "start_idx": 39,
+        "end_idx": 41,
+        "entity": "发热"
+      },
+      {
+        "start_idx": 48,
+        "end_idx": 50,
+        "entity": "头痛"
+      },
+      {
+        "start_idx": 60,
+        "end_idx": 64,
+        "entity": "食欲不振"
+      },
+      {
+        "start_idx": 67,
+        "end_idx": 69,
+        "entity": "乏力"
+      }
+    ]
+  },
+  {
+    "text": "右手无名指尖到手腕这一段老是发麻，尤其是骑电动车的时候麻得更厉害，晚上睡觉有时候能麻醒。大拇指下面那块肌肉好像比左手瘪下去了一点，用手掐都没啥感觉。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 8,
+        "entity": "肢体麻木"
+      }
+    ]
+  },
+  {
+    "text": "这几天老想尿尿，刚尿完又想尿，但是每次只能尿出来一点点，尿的时候还特别疼，火烧火燎的。小肚子也有点胀痛不舒服。喝水也不少怎么尿颜色还是特别黄。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 6,
+        "entity": "尿频"
+      },
+      {
+        "start_idx": 20,
+        "end_idx": 22,
+        "entity": "尿痛"
+      },
+      {
+        "start_idx": 41,
+        "end_idx": 43,
+        "entity": "腹痛"
+      }
+    ]
+  },
+  {
+    "text": "眼睛红了一个星期了，开始是左边眼睛红，现在两边都红了，全是红血丝，眼屎特别多早上起来眼睛都糊住了。没怎么疼就是磨得慌，有点怕光看手机屏幕感觉刺眼。",
+    "entities": [
+      {
+        "start_idx": 30,
+        "end_idx": 32,
+        "entity": "畏光"
+      }
+    ]
+  },
+  {
+    "text": "后背正中靠腰那个位置突然开始疼，早上刷牙弯腰的时候嘎嘣响了一声，然后就直不起腰了。现在只能侧躺着稍微舒服一点，站起来走两步就疼得龇牙咧嘴的。",
+    "entities": [
+      {
+        "start_idx": 14,
+        "end_idx": 16,
+        "entity": "腰痛"
+      }
+    ]
+  },
+  {
+    "text": "耳鸣三个多月了，耳朵里一直有电流声嗡嗡的停不下来，安静的时候尤其明显。这段时间听力好像也下降了，别人小声跟我说话听不清，电视声音越开越大。经常觉得头晕乎乎的特别是猛地一站起来眼前发黑。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 2,
+        "entity": "耳鸣"
+      },
+      {
+        "start_idx": 41,
+        "end_idx": 43,
+        "entity": "听力下降"
+      },
+      {
+        "start_idx": 74,
+        "end_idx": 76,
+        "entity": "头晕"
+      }
+    ]
+  },
+  {
+    "text": "胸闷心慌有一周了，就是感觉胸口压了块大石头透不过气来，心脏有时候会突然猛跳几下然后又好了。心电图做了说是偶发早搏，血压也偏高以前没有高血压。同事说我最近脸色特别白没有血色。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 2,
+        "entity": "胸闷"
+      },
+      {
+        "start_idx": 4,
+        "end_idx": 6,
+        "entity": "心悸"
+      },
+      {
+        "start_idx": 19,
+        "end_idx": 23,
+        "entity": "呼吸困难"
+      },
+      {
+        "start_idx": 85,
+        "end_idx": 87,
+        "entity": "乏力"
+      }
+    ]
+  },
+  {
+    "text": "小孩三岁，昨天从沙发上摔下来头着地，当时哭了哄了一会儿不哭了还喝了奶，看起来好像没啥事。但晚上吐了一次，是喷射状吐出来老远的那种，精神不太好有点昏昏沉沉的叫半天才答应一声。",
+    "entities": [
+      {
+        "start_idx": 30,
+        "end_idx": 32,
+        "entity": "呕吐"
+      },
+      {
+        "start_idx": 53,
+        "end_idx": 55,
+        "entity": "意识障碍"
+      }
+    ]
+  },
+  {
+    "text": "脚后跟走路走多了就疼，早上起床下地的头几步简直钻心的疼，走走活动开了能好一点，但是走远了又不行了。体检报告说尿酸偏高，平时爱吃肉海鲜喝啤酒。",
+    "entities": [
+      {
+        "start_idx": 18,
+        "end_idx": 20,
+        "entity": "足痛"
+      }
+    ]
+  },
+  {
+    "text": "夜里睡觉老打呼噜，老婆说有时候我的呼噜会突然停几十秒，然后猛地倒吸一口气像被憋醒了似的，自己完全不知道。白天困得要命坐那儿就睡着了，记忆力也不行了工作老出差错，最近血压也上来了。",
+    "entities": [
+      {
+        "start_idx": 53,
+        "end_idx": 57,
+        "entity": "呼吸困难"
+      },
+      {
+        "start_idx": 69,
+        "end_idx": 71,
+        "entity": "乏力"
+      }
+    ]
+  },
+  {
+    "text": "尿里面泡沫特别多，像啤酒沫一样一直不消，已经持续大半年了。最近脚踝和小腿有点浮肿，早上起来眼睛也是泡泡的。上个月体检尿蛋白三个加号，血压也开始高了，医生让住院我没当回事。",
+    "entities": [
+      {
+        "start_idx": 14,
+        "end_idx": 16,
+        "entity": "泡沫尿"
+      },
+      {
+        "start_idx": 30,
+        "end_idx": 32,
+        "entity": "下肢浮肿"
+      },
+      {
+        "start_idx": 50,
+        "end_idx": 52,
+        "entity": "面部浮肿"
+      }
+    ]
+  },
+  {
+    "text": "医生，我呼吸困难，看不清，这种情况怎么办？",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 8,
+        "entity": "呼吸困难"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 17,
+        "entity": "视力模糊"
+      }
+    ]
+  },
+  {
+    "text": "最近压力大，动不了和都犯了。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 9,
+        "entity": "活动受限"
+      }
+    ]
+  },
+  {
+    "text": "主要是关节肿胀，还有点便秘。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 7,
+        "entity": "关节肿胀"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 18,
+        "entity": "便秘"
+      }
+    ]
+  },
+  {
+    "text": "流鼻涕好几天了，一直没好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 3,
+        "entity": "流鼻涕"
+      }
+    ]
+  },
+  {
+    "text": "就是听力下降，然后嗳气，没别的了。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "听力下降"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 16,
+        "entity": "打嗝"
+      }
+    ]
+  },
+  {
+    "text": "从昨天开始僵硬，越来越严重。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 7,
+        "entity": "活动受限"
+      }
+    ]
+  },
+  {
+    "text": "老是听力下降，反反复复的。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "听力下降"
+      }
+    ]
+  },
+  {
+    "text": "其实主要是脚踝扭伤，偶尔膝盖痛，不太。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 9,
+        "entity": "扭伤"
+      },
+      {
+        "start_idx": 17,
+        "end_idx": 20,
+        "entity": "关节痛"
+      }
+    ]
+  },
+  {
+    "text": "运动后口干舌燥加重，休息时。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 7,
+        "entity": "口干"
+      }
+    ]
+  },
+  {
+    "text": "担心特别严重，肢体麻木倒是轻微。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 2,
+        "entity": "焦虑"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 18,
+        "entity": "肢体麻木"
+      }
+    ]
+  },
+  {
+    "text": "早上起来恶心，到了晚上。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 6,
+        "entity": "恶心"
+      }
+    ]
+  },
+  {
+    "text": "其实主要是打喷涕，偶尔，不太。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 8,
+        "entity": "打喷嚏"
+      }
+    ]
+  },
+  {
+    "text": "视力下降特别严重，腹痛(左下)倒是轻微。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "视力模糊"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 20,
+        "entity": "腹痛(左下)"
+      }
+    ]
+  },
+  {
+    "text": "拉肚子好几天了，一直没好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 3,
+        "entity": "腹泻"
+      }
+    ]
+  },
+  {
+    "text": "感冒好了以后一直烧心，还鼻涕。",
+    "entities": [
+      {
+        "start_idx": 8,
+        "end_idx": 10,
+        "entity": "反酸"
+      },
+      {
+        "start_idx": 19,
+        "end_idx": 21,
+        "entity": "流鼻涕"
+      }
+    ]
+  },
+  {
+    "text": "脖子粗好几天了，一直没好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 3,
+        "entity": "颈部肿块"
+      }
+    ]
+  },
+  {
+    "text": "运动后小便痛加重，休息时眼睑肿。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 6,
+        "entity": "尿痛"
+      },
+      {
+        "start_idx": 18,
+        "end_idx": 21,
+        "entity": "水肿"
+      }
+    ]
+  },
+  {
+    "text": "感冒好了以后一直鼻涕，还。",
+    "entities": [
+      {
+        "start_idx": 8,
+        "end_idx": 10,
+        "entity": "流鼻涕"
+      }
+    ]
+  },
+  {
+    "text": "我最近低热，挺难受的。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 5,
+        "entity": "发热"
+      }
+    ]
+  },
+  {
+    "text": "我最近多饮，挺难受的。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 5,
+        "entity": "多饮"
+      }
+    ]
+  },
+  {
+    "text": "老是水肿，反反复复的。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "水肿"
+      }
+    ]
+  },
+  {
+    "text": "运动后耳痛加重，休息时颈部痉挛。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 5,
+        "entity": "耳痛"
+      },
+      {
+        "start_idx": 18,
+        "end_idx": 22,
+        "entity": "颈部痉挛"
+      }
+    ]
+  },
+  {
+    "text": "嗜睡，而且，要挂哪个科？",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 2,
+        "entity": "意识障碍"
+      }
+    ]
+  },
+  {
+    "text": "吃完饭后厌食，过一会尿频。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 6,
+        "entity": "食欲不振"
+      },
+      {
+        "start_idx": 17,
+        "end_idx": 19,
+        "entity": "尿频"
+      }
+    ]
+  },
+  {
+    "text": "刚开始只是紧张不安，后来也出现了。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 9,
+        "entity": "焦虑"
+      }
+    ]
+  },
+  {
+    "text": "老是腹痛(弥漫)，反反复复的。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 8,
+        "entity": "腹痛(弥漫)"
+      }
+    ]
+  },
+  {
+    "text": "耳后压痛特别严重，倒是轻微。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "耳后痛"
+      }
+    ]
+  },
+  {
+    "text": "感觉声音嘶哑(犬吠样)，另外也比较明显。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 11,
+        "entity": "声音嘶哑(犬吠样)"
+      }
+    ]
+  },
+  {
+    "text": "主要是淋巴肿大，还有点劳力性气短。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 7,
+        "entity": "淋巴结肿大"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 21,
+        "entity": "心悸气短"
+      }
+    ]
+  },
+  {
+    "text": "其实主要是耳朵疼，偶尔脚痛，不太。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 8,
+        "entity": "耳痛"
+      },
+      {
+        "start_idx": 17,
+        "end_idx": 19,
+        "entity": "脚部疼痛"
+      }
+    ]
+  },
+  {
+    "text": "老是眼睑肿，反反复复的。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 5,
+        "entity": "水肿"
+      }
+    ]
+  },
+  {
+    "text": "这几天睡觉出汗得厉害，步态异常也有。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 7,
+        "entity": "夜间盗汗"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 20,
+        "entity": "步态异常"
+      }
+    ]
+  },
+  {
+    "text": "就是丘疹，然后舌痉挛，没别的了。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "皮疹"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 17,
+        "entity": "舌痉挛"
+      }
+    ]
+  },
+  {
+    "text": "从昨天开始手脚麻，越来越严重。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 8,
+        "entity": "肢体麻木"
+      }
+    ]
+  },
+  {
+    "text": "我最近活动困难，挺难受的。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 7,
+        "entity": "活动受限"
+      }
+    ]
+  },
+  {
+    "text": "运动后耳朵疼加重，休息时平衡障碍。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 6,
+        "entity": "耳痛"
+      },
+      {
+        "start_idx": 18,
+        "end_idx": 22,
+        "entity": "平衡障碍"
+      }
+    ]
+  },
+  {
+    "text": "下肢无力好几天了，一直没好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "下肢无力"
+      }
+    ]
+  },
+  {
+    "text": "运动后劳力性气短加重，休息时憋气。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 8,
+        "entity": "心悸气短"
+      },
+      {
+        "start_idx": 18,
+        "end_idx": 20,
+        "entity": "胸闷"
+      }
+    ]
+  },
+  {
+    "text": "大概一周了，颈部僵硬和断断续续的。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 10,
+        "entity": "颈部僵硬"
+      }
+    ]
+  },
+  {
+    "text": "医生，我打嚏喷，，这种情况怎么办？",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 7,
+        "entity": "打喷嚏"
+      }
+    ]
+  },
+  {
+    "text": "最难受的就是颈椎痛，睡不着倒还好。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 9,
+        "entity": "颈部僵硬"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 19,
+        "entity": "失眠"
+      }
+    ]
+  },
+  {
+    "text": "就是眼睑下垂，然后瘀血，没别的了。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "眼睑下垂"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 16,
+        "entity": "瘀斑"
+      }
+    ]
+  },
+  {
+    "text": "胸部压迫感好几天了，一直没好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 5,
+        "entity": "胸闷"
+      }
+    ]
+  },
+  {
+    "text": "其实主要是嘴角下垂，偶尔腰痛，不太。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 9,
+        "entity": "口眼歪斜"
+      },
+      {
+        "start_idx": 17,
+        "end_idx": 19,
+        "entity": "腰痛"
+      }
+    ]
+  },
+  {
+    "text": "主要是腹痛(右上)，还有点脖子硬。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 9,
+        "entity": "腹痛(右上)"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 19,
+        "entity": "颈部僵硬"
+      }
+    ]
+  },
+  {
+    "text": "步态异常好几天了，一直没好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "步态异常"
+      }
+    ]
+  },
+  {
+    "text": "有点肢体麻木，很没力气，但不颈部僵硬。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "肢体麻木"
+      },
+      {
+        "start_idx": 13,
+        "end_idx": 16,
+        "entity": "乏力"
+      },
+      {
+        "start_idx": 26,
+        "end_idx": 30,
+        "entity": "颈部僵硬"
+      }
+    ]
+  },
+  {
+    "text": "月经不调，失声，晚上都睡不好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "月经不调"
+      },
+      {
+        "start_idx": 10,
+        "end_idx": 12,
+        "entity": "失声"
+      }
+    ]
+  },
+  {
+    "text": "我妈流黄涕，我爸也，遗传的吗？",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 5,
+        "entity": "流鼻涕"
+      }
+    ]
+  },
+  {
+    "text": "腹痛(左上)好几天了，一直没好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 6,
+        "entity": "腹痛(左上)"
+      }
+    ]
+  },
+  {
+    "text": "早上起来眼睑肿，到了晚上出疹子。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 7,
+        "entity": "水肿"
+      },
+      {
+        "start_idx": 18,
+        "end_idx": 21,
+        "entity": "皮疹"
+      }
+    ]
+  },
+  {
+    "text": "最难受的就是流眼泪，耳根痛倒还好。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 9,
+        "entity": "流泪"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 19,
+        "entity": "耳痛"
+      }
+    ]
+  },
+  {
+    "text": "最近压力大，面痛和腹痛都犯了。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 8,
+        "entity": "面部压痛"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 18,
+        "entity": "腹痛"
+      }
+    ]
+  },
+  {
+    "text": "有点面部水肿，很，但不。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "面部水肿"
+      }
+    ]
+  },
+  {
+    "text": "畏光特别严重，肩背痛倒是轻微。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 2,
+        "entity": "畏光"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 17,
+        "entity": "背痛"
+      }
+    ]
+  },
+  {
+    "text": "主要是尿频量多，还有点胸口闷。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 7,
+        "entity": "多尿"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 19,
+        "entity": "胸闷"
+      }
+    ]
+  },
+  {
+    "text": "早上起来浑身疼，到了晚上耳后痛。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 7,
+        "entity": "肌肉痛"
+      },
+      {
+        "start_idx": 18,
+        "end_idx": 21,
+        "entity": "耳后痛"
+      }
+    ]
+  },
+  {
+    "text": "头昏好几天了，一直没好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 2,
+        "entity": "头晕"
+      }
+    ]
+  },
+  {
+    "text": "有点活动后心慌，很，但不。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 7,
+        "entity": "心悸气短"
+      }
+    ]
+  },
+  {
+    "text": "感冒好了以后一直肚子胀，还鼻子不通气。",
+    "entities": [
+      {
+        "start_idx": 8,
+        "end_idx": 11,
+        "entity": "腹胀"
+      },
+      {
+        "start_idx": 19,
+        "end_idx": 24,
+        "entity": "鼻塞"
+      }
+    ]
+  },
+  {
+    "text": "从昨天开始紧张不安，越来越严重。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 9,
+        "entity": "焦虑"
+      }
+    ]
+  },
+  {
+    "text": "口眼歪斜好几天了，一直没好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "口眼歪斜"
+      }
+    ]
+  },
+  {
+    "text": "口齿不清，而且现实感丧失，要挂哪个科？",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "言语不清"
+      },
+      {
+        "start_idx": 12,
+        "end_idx": 17,
+        "entity": "现实感丧失"
+      }
+    ]
+  },
+  {
+    "text": "运动后背疼加重，休息时。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 5,
+        "entity": "背痛"
+      }
+    ]
+  },
+  {
+    "text": "下肢肿特别严重，干呕倒是轻微。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 3,
+        "entity": "水肿"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 16,
+        "entity": "呕吐"
+      }
+    ]
+  },
+  {
+    "text": "早上起来半身麻木，到了晚上小腿疼。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 8,
+        "entity": "肢体麻木"
+      },
+      {
+        "start_idx": 18,
+        "end_idx": 21,
+        "entity": "腿部疼痛"
+      }
+    ]
+  },
+  {
+    "text": "坐立不安，有时候还会出汗异常。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "坐立不安"
+      },
+      {
+        "start_idx": 15,
+        "end_idx": 19,
+        "entity": "出汗异常"
+      }
+    ]
+  },
+  {
+    "text": "大概一周了，肩痛和胸口痛断断续续的。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 8,
+        "entity": "肩痛"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 19,
+        "entity": "胸痛"
+      }
+    ]
+  },
+  {
+    "text": "腹痛(右上)特别严重，心慌倒是轻微。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 6,
+        "entity": "腹痛(右上)"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 16,
+        "entity": "心悸"
+      }
+    ]
+  },
+  {
+    "text": "请问鼻翼煽动，伴随着，是什么问题？",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "鼻翼煽动"
+      }
+    ]
+  },
+  {
+    "text": "最难受的就是耳鸣，高热倒还好。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 8,
+        "entity": "耳鸣"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 18,
+        "entity": "发热"
+      }
+    ]
+  },
+  {
+    "text": "我妈盗汗，我爸也，遗传的吗？",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "盗汗"
+      }
+    ]
+  },
+  {
+    "text": "有点眩晕，很，但不。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "头晕"
+      }
+    ]
+  },
+  {
+    "text": "请问连续喷嚏，伴随着视物模糊，是什么问题？",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "打喷嚏"
+      },
+      {
+        "start_idx": 15,
+        "end_idx": 19,
+        "entity": "视力模糊"
+      }
+    ]
+  },
+  {
+    "text": "这几天嘴破得厉害，打喷嚏也有。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 5,
+        "entity": "口腔溃疡"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 19,
+        "entity": "打喷嚏"
+      }
+    ]
+  },
+  {
+    "text": "面色异常，有时候还会。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "面色异常"
+      }
+    ]
+  },
+  {
+    "text": "嗡嗡声，有时候还会肩背痛。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 3,
+        "entity": "耳鸣"
+      },
+      {
+        "start_idx": 15,
+        "end_idx": 18,
+        "entity": "背痛"
+      }
+    ]
+  },
+  {
+    "text": "最近压力大，胸口痛和流清涕都犯了。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 9,
+        "entity": "胸痛"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 19,
+        "entity": "流鼻涕"
+      }
+    ]
+  },
+  {
+    "text": "从昨天开始水肿，越来越严重。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 7,
+        "entity": "水肿"
+      }
+    ]
+  },
+  {
+    "text": "感觉打喷涕，另外记忆力下降也比较明显。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 5,
+        "entity": "打喷嚏"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 19,
+        "entity": "记忆力下降"
+      }
+    ]
+  },
+  {
+    "text": "怕冷发抖好几天了，一直没好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "寒战"
+      }
+    ]
+  },
+  {
+    "text": "尿频，腰酸，晚上都睡不好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 2,
+        "entity": "尿频"
+      },
+      {
+        "start_idx": 10,
+        "end_idx": 12,
+        "entity": "腰痛"
+      }
+    ]
+  },
+  {
+    "text": "其实主要是后背痛，偶尔口眼歪斜，不太。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 8,
+        "entity": "背痛"
+      },
+      {
+        "start_idx": 17,
+        "end_idx": 21,
+        "entity": "口眼歪斜"
+      }
+    ]
+  },
+  {
+    "text": "运动后尿多加重，休息时。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 5,
+        "entity": "尿频"
+      }
+    ]
+  },
+  {
+    "text": "刚开始只是月经不调，后来失语也出现了。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 9,
+        "entity": "月经不调"
+      },
+      {
+        "start_idx": 17,
+        "end_idx": 19,
+        "entity": "言语不清"
+      }
+    ]
+  },
+  {
+    "text": "夜间出汗，而且，要挂哪个科？",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "夜间盗汗"
+      }
+    ]
+  },
+  {
+    "text": "最难受的就是大便不畅，倒还好。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 10,
+        "entity": "便秘"
+      }
+    ]
+  },
+  {
+    "text": "拉肚子特别严重，言语困难倒是轻微。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 3,
+        "entity": "腹泻"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 18,
+        "entity": "言语困难"
+      }
+    ]
+  },
+  {
+    "text": "老是腰疼，反反复复的。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "腰痛"
+      }
+    ]
+  },
+  {
+    "text": "这几天淋巴结肿大得厉害，肿得很厉害也有。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 8,
+        "entity": "淋巴结肿大"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 21,
+        "entity": "肿胀"
+      }
+    ]
+  },
+  {
+    "text": "运动后泡沫痰加重，休息时拉肚子。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 6,
+        "entity": "咳痰"
+      },
+      {
+        "start_idx": 18,
+        "end_idx": 21,
+        "entity": "腹泻"
+      }
+    ]
+  },
+  {
+    "text": "就是嘴破，然后夜尿多，没别的了。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "口腔溃疡"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 17,
+        "entity": "多尿"
+      }
+    ]
+  },
+  {
+    "text": "肩痛，而且偏头痛，要挂哪个科？",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 2,
+        "entity": "肩痛"
+      },
+      {
+        "start_idx": 12,
+        "end_idx": 15,
+        "entity": "头痛"
+      }
+    ]
+  },
+  {
+    "text": "医生，我鼻水，腿痛，这种情况怎么办？",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 6,
+        "entity": "流鼻涕"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 16,
+        "entity": "腿部疼痛"
+      }
+    ]
+  },
+  {
+    "text": "其实主要是水样便，偶尔面部皮疹，不太。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 8,
+        "entity": "腹泻"
+      },
+      {
+        "start_idx": 17,
+        "end_idx": 21,
+        "entity": "面部皮疹"
+      }
+    ]
+  },
+  {
+    "text": "从昨天开始腹痛，越来越严重。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 7,
+        "entity": "腹痛"
+      }
+    ]
+  },
+  {
+    "text": "浑身没劲，而且全身疼痛，要挂哪个科？",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "乏力"
+      },
+      {
+        "start_idx": 12,
+        "end_idx": 16,
+        "entity": "全身疼痛"
+      }
+    ]
+  },
+  {
+    "text": "抽搐，而且，要挂哪个科？",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 2,
+        "entity": "抽搐"
+      }
+    ]
+  },
+  {
+    "text": "感冒好了以后一直言语不清，还背痛。",
+    "entities": [
+      {
+        "start_idx": 8,
+        "end_idx": 12,
+        "entity": "言语不清"
+      },
+      {
+        "start_idx": 19,
+        "end_idx": 21,
+        "entity": "背痛"
+      }
+    ]
+  },
+  {
+    "text": "其实主要是眼睛黄，偶尔，不太。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 8,
+        "entity": "黄疸"
+      }
+    ]
+  },
+  {
+    "text": "大概一周了，吞咽困难(液体)和断断续续的。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 14,
+        "entity": "吞咽困难(液体)"
+      }
+    ]
+  },
+  {
+    "text": "感冒好了以后一直失声，还出疹子。",
+    "entities": [
+      {
+        "start_idx": 8,
+        "end_idx": 10,
+        "entity": "失声"
+      },
+      {
+        "start_idx": 19,
+        "end_idx": 22,
+        "entity": "皮疹"
+      }
+    ]
+  },
+  {
+    "text": "这几天Do you have pain that is increased with movement?得厉害，也有。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 52,
+        "entity": "Do you have pain that is increased with movement?"
+      }
+    ]
+  },
+  {
+    "text": "大概一周了，颈部结节和迎风流泪断断续续的。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 10,
+        "entity": "淋巴结肿大"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 20,
+        "entity": "流泪"
+      }
+    ]
+  },
+  {
+    "text": "最难受的就是胸闷气短，鼻子不通气倒还好。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 10,
+        "entity": "胸闷"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 21,
+        "entity": "鼻塞"
+      }
+    ]
+  },
+  {
+    "text": "有点痉挛，很鼻翼煽动，但不。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "抽搐"
+      },
+      {
+        "start_idx": 13,
+        "end_idx": 17,
+        "entity": "鼻翼煽动"
+      }
+    ]
+  },
+  {
+    "text": "感觉头昏，另外也比较明显。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "头晕"
+      }
+    ]
+  },
+  {
+    "text": "淋巴结肿大好几天了，一直没好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 5,
+        "entity": "淋巴结肿大"
+      }
+    ]
+  },
+  {
+    "text": "有点心跳不齐，很，但不。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "心悸"
+      }
+    ]
+  },
+  {
+    "text": "这几天端坐呼吸得厉害，关节红肿也有。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 7,
+        "entity": "端坐呼吸"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 20,
+        "entity": "关节肿胀"
+      }
+    ]
+  },
+  {
+    "text": "我妈肿了，我爸也，遗传的吗？",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "肿胀"
+      }
+    ]
+  },
+  {
+    "text": "请问脚踝扭伤，伴随着眼睛黄，是什么问题？",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "扭伤"
+      },
+      {
+        "start_idx": 15,
+        "end_idx": 18,
+        "entity": "黄疸"
+      }
+    ]
+  },
+  {
+    "text": "局部疼痛好几天了，一直没好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "局部疼痛"
+      }
+    ]
+  },
+  {
+    "text": "我最近牙疼，挺难受的。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 5,
+        "entity": "牙痛"
+      }
+    ]
+  },
+  {
+    "text": "这几天畏光得厉害，也有。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 5,
+        "entity": "畏光"
+      }
+    ]
+  },
+  {
+    "text": "请问咳嗽加重，伴随着排尿频繁，是什么问题？",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "咳嗽加重"
+      },
+      {
+        "start_idx": 15,
+        "end_idx": 19,
+        "entity": "尿频"
+      }
+    ]
+  },
+  {
+    "text": "牙痛，而且眩晕，要挂哪个科？",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 2,
+        "entity": "牙痛"
+      },
+      {
+        "start_idx": 12,
+        "end_idx": 14,
+        "entity": "头晕"
+      }
+    ]
+  },
+  {
+    "text": "这几天胃酸得厉害，也有。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 5,
+        "entity": "反酸"
+      }
+    ]
+  },
+  {
+    "text": "刚开始只是肿了，后来也出现了。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 7,
+        "entity": "肿胀"
+      }
+    ]
+  },
+  {
+    "text": "我最近干咳，挺难受的。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 5,
+        "entity": "咳嗽"
+      }
+    ]
+  },
+  {
+    "text": "浑身疼，流鼻涕，晚上都睡不好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 3,
+        "entity": "肌肉痛"
+      },
+      {
+        "start_idx": 10,
+        "end_idx": 13,
+        "entity": "流鼻涕"
+      }
+    ]
+  },
+  {
+    "text": "最近压力大，入睡困难和声音嘶哑(犬吠样)都犯了。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 10,
+        "entity": "失眠"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 25,
+        "entity": "声音嘶哑(犬吠样)"
+      }
+    ]
+  },
+  {
+    "text": "记不住事好几天了，一直没好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "记忆力下降"
+      }
+    ]
+  },
+  {
+    "text": "吃完饭后体重下降，过一会。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 8,
+        "entity": "体重下降"
+      }
+    ]
+  },
+  {
+    "text": "主要是容易饿，还有点嗓子疼。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 6,
+        "entity": "多食"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 19,
+        "entity": "喉咙痛"
+      }
+    ]
+  },
+  {
+    "text": "有点乏力，很疲劳，但不憋气。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "乏力"
+      },
+      {
+        "start_idx": 13,
+        "end_idx": 15,
+        "entity": "疲劳"
+      },
+      {
+        "start_idx": 26,
+        "end_idx": 28,
+        "entity": "胸闷"
+      }
+    ]
+  },
+  {
+    "text": "就是头晕，然后，没别的了。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "头晕"
+      }
+    ]
+  },
+  {
+    "text": "大概一周了，尿道刺痛和腰痛断断续续的。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 10,
+        "entity": "尿痛"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 18,
+        "entity": "腰痛"
+      }
+    ]
+  },
+  {
+    "text": "主要是痉挛，还有点腹部不适。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 5,
+        "entity": "抽搐"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 20,
+        "entity": "腹痛"
+      }
+    ]
+  },
+  {
+    "text": "吃完饭后咽不下东西，过一会。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 9,
+        "entity": "吞咽困难"
+      }
+    ]
+  },
+  {
+    "text": "张口困难，脖子硬，晚上都睡不好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "张口困难"
+      },
+      {
+        "start_idx": 10,
+        "end_idx": 13,
+        "entity": "颈部僵硬"
+      }
+    ]
+  },
+  {
+    "text": "最难受的就是黄痰，冷汗倒还好。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 8,
+        "entity": "咳痰"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 18,
+        "entity": "出汗异常"
+      }
+    ]
+  },
+  {
+    "text": "感觉口疮，另外抬肩困难也比较明显。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "口腔溃疡"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 18,
+        "entity": "肩痛"
+      }
+    ]
+  },
+  {
+    "text": "早上起来现实感丧失，到了晚上大便次数多。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 9,
+        "entity": "现实感丧失"
+      },
+      {
+        "start_idx": 18,
+        "end_idx": 23,
+        "entity": "腹泻"
+      }
+    ]
+  },
+  {
+    "text": "这几天咳嗽后呕吐得厉害，濒死感也有。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 8,
+        "entity": "咳嗽后呕吐"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 19,
+        "entity": "濒死感"
+      }
+    ]
+  },
+  {
+    "text": "最难受的就是足部疼痛，红疹倒还好。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 10,
+        "entity": "脚部疼痛"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 18,
+        "entity": "皮疹"
+      }
+    ]
+  },
+  {
+    "text": "大概一周了，颈部无力和水肿断断续续的。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 10,
+        "entity": "颈部无力"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 18,
+        "entity": "水肿"
+      }
+    ]
+  },
+  {
+    "text": "感冒好了以后一直呼吸不畅，还Do you have pain that is increased with movement?。",
+    "entities": [
+      {
+        "start_idx": 8,
+        "end_idx": 12,
+        "entity": "鼻塞"
+      },
+      {
+        "start_idx": 19,
+        "end_idx": 68,
+        "entity": "Do you have pain that is increased with movement?"
+      }
+    ]
+  },
+  {
+    "text": "这几天喂养困难得厉害，怕见光也有。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 7,
+        "entity": "喂养困难"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 19,
+        "entity": "畏光"
+      }
+    ]
+  },
+  {
+    "text": "医生，我口疮，，这种情况怎么办？",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 6,
+        "entity": "口腔溃疡"
+      }
+    ]
+  },
+  {
+    "text": "有点局部肿胀，很便秘，但不嘴破。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "肿胀"
+      },
+      {
+        "start_idx": 13,
+        "end_idx": 15,
+        "entity": "便秘"
+      },
+      {
+        "start_idx": 26,
+        "end_idx": 28,
+        "entity": "口腔溃疡"
+      }
+    ]
+  },
+  {
+    "text": "有点红肿，很颈部僵硬，但不憋气。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "肿胀"
+      },
+      {
+        "start_idx": 13,
+        "end_idx": 17,
+        "entity": "颈部僵硬"
+      },
+      {
+        "start_idx": 26,
+        "end_idx": 28,
+        "entity": "胸闷"
+      }
+    ]
+  },
+  {
+    "text": "有点舌麻，很消瘦，但不。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "肢体麻木"
+      },
+      {
+        "start_idx": 13,
+        "end_idx": 15,
+        "entity": "体重下降"
+      }
+    ]
+  },
+  {
+    "text": "最近压力大，胃酸和都犯了。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 8,
+        "entity": "反酸"
+      }
+    ]
+  },
+  {
+    "text": "出汗异常，泛酸，晚上都睡不好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "出汗异常"
+      },
+      {
+        "start_idx": 10,
+        "end_idx": 12,
+        "entity": "反酸"
+      }
+    ]
+  },
+  {
+    "text": "请问荨麻疹，伴随着，是什么问题？",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 5,
+        "entity": "皮疹"
+      }
+    ]
+  },
+  {
+    "text": "就是全身肿，然后感觉异常，没别的了。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 5,
+        "entity": "水肿"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 18,
+        "entity": "感觉异常"
+      }
+    ]
+  },
+  {
+    "text": "我最近下肢肿，挺难受的。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 6,
+        "entity": "水肿"
+      }
+    ]
+  },
+  {
+    "text": "主要是肌肉酸痛，还有点。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 7,
+        "entity": "肌肉酸痛"
+      }
+    ]
+  },
+  {
+    "text": "冷汗特别严重，心跳快倒是轻微。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 2,
+        "entity": "出汗异常"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 17,
+        "entity": "心悸"
+      }
+    ]
+  },
+  {
+    "text": "不适感，有时候还会胸口痛。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 3,
+        "entity": "不适感"
+      },
+      {
+        "start_idx": 15,
+        "end_idx": 18,
+        "entity": "胸痛"
+      }
+    ]
+  },
+  {
+    "text": "就是急性发作疼痛，然后耳根后痛，没别的了。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 8,
+        "entity": "急性发作疼痛"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 18,
+        "entity": "耳后痛"
+      }
+    ]
+  },
+  {
+    "text": "夜尿多特别严重，疼痛时间模式倒是轻微。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 3,
+        "entity": "多尿"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 20,
+        "entity": "疼痛时间模式"
+      }
+    ]
+  },
+  {
+    "text": "荨麻疹，有时候还会舌麻。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 3,
+        "entity": "皮疹"
+      },
+      {
+        "start_idx": 15,
+        "end_idx": 17,
+        "entity": "肢体麻木"
+      }
+    ]
+  },
+  {
+    "text": "早上起来便血，到了晚上肩痛。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 6,
+        "entity": "便血"
+      },
+      {
+        "start_idx": 18,
+        "end_idx": 20,
+        "entity": "肩痛"
+      }
+    ]
+  },
+  {
+    "text": "口眼歪斜，而且耳后压痛，要挂哪个科？",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "口眼歪斜"
+      },
+      {
+        "start_idx": 12,
+        "end_idx": 16,
+        "entity": "耳后痛"
+      }
+    ]
+  },
+  {
+    "text": "从昨天开始注意力不集中，越来越严重。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 11,
+        "entity": "注意力不集中"
+      }
+    ]
+  },
+  {
+    "text": "最近压力大，担心和都犯了。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 8,
+        "entity": "焦虑"
+      }
+    ]
+  },
+  {
+    "text": "请问颈部结节，伴随着打嚏喷，是什么问题？",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "淋巴结肿大"
+      },
+      {
+        "start_idx": 15,
+        "end_idx": 18,
+        "entity": "打喷嚏"
+      }
+    ]
+  },
+  {
+    "text": "我最近手脚麻，挺难受的。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 6,
+        "entity": "肢体麻木"
+      }
+    ]
+  },
+  {
+    "text": "这几天记性差得厉害，吞咽困难也有。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 6,
+        "entity": "记忆力下降"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 20,
+        "entity": "吞咽困难"
+      }
+    ]
+  },
+  {
+    "text": "医生，我天旋地转，，这种情况怎么办？",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 8,
+        "entity": "头晕"
+      }
+    ]
+  },
+  {
+    "text": "吃完饭后想吐，过一会步态异常。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 6,
+        "entity": "恶心"
+      },
+      {
+        "start_idx": 17,
+        "end_idx": 21,
+        "entity": "步态异常"
+      }
+    ]
+  },
+  {
+    "text": "咳痰特别严重，倒是轻微。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 2,
+        "entity": "咳痰"
+      }
+    ]
+  },
+  {
+    "text": "吃完饭后打冷战，过一会关节肿痛。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 7,
+        "entity": "寒战"
+      },
+      {
+        "start_idx": 17,
+        "end_idx": 21,
+        "entity": "关节痛"
+      }
+    ]
+  },
+  {
+    "text": "大概一周了，颈部僵硬和消瘦断断续续的。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 10,
+        "entity": "颈部僵硬"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 18,
+        "entity": "体重下降"
+      }
+    ]
+  },
+  {
+    "text": "头痛好几天了，一直没好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 2,
+        "entity": "头痛"
+      }
+    ]
+  },
+  {
+    "text": "最难受的就是眼睛黄，倒还好。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 9,
+        "entity": "黄疸"
+      }
+    ]
+  },
+  {
+    "text": "其实主要是肚子胀，偶尔流眼泪，不太口腔溃疡。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 8,
+        "entity": "腹胀"
+      },
+      {
+        "start_idx": 17,
+        "end_idx": 20,
+        "entity": "流泪"
+      },
+      {
+        "start_idx": 30,
+        "end_idx": 34,
+        "entity": "口腔溃疡"
+      }
+    ]
+  },
+  {
+    "text": "感觉怕冷发抖，另外也比较明显。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "寒战"
+      }
+    ]
+  },
+  {
+    "text": "这几天大便不畅得厉害，大便带血也有。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 7,
+        "entity": "便秘"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 20,
+        "entity": "便血"
+      }
+    ]
+  },
+  {
+    "text": "老是尿多，反反复复的。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "尿频"
+      }
+    ]
+  },
+  {
+    "text": "有点偏头痛，很面色异常，但不反胃。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 5,
+        "entity": "头痛"
+      },
+      {
+        "start_idx": 13,
+        "end_idx": 17,
+        "entity": "面色异常"
+      },
+      {
+        "start_idx": 26,
+        "end_idx": 28,
+        "entity": "恶心"
+      }
+    ]
+  },
+  {
+    "text": "刚开始只是瘀斑，后来食欲不振也出现了。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 7,
+        "entity": "瘀斑"
+      },
+      {
+        "start_idx": 17,
+        "end_idx": 21,
+        "entity": "食欲不振"
+      }
+    ]
+  },
+  {
+    "text": "最近压力大，视物模糊和青紫都犯了。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 10,
+        "entity": "视力模糊"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 18,
+        "entity": "瘀斑"
+      }
+    ]
+  },
+  {
+    "text": "其实主要是全身水肿，偶尔头痛，不太腰部不适。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 9,
+        "entity": "全身水肿"
+      },
+      {
+        "start_idx": 17,
+        "end_idx": 19,
+        "entity": "头痛"
+      },
+      {
+        "start_idx": 30,
+        "end_idx": 34,
+        "entity": "腰痛"
+      }
+    ]
+  },
+  {
+    "text": "其实主要是连续喷嚏，偶尔特别痒，不太。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 9,
+        "entity": "打喷嚏"
+      },
+      {
+        "start_idx": 17,
+        "end_idx": 20,
+        "entity": "瘙痒"
+      }
+    ]
+  },
+  {
+    "text": "胸痛(心前区)好几天了，一直没好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 7,
+        "entity": "胸痛(心前区)"
+      }
+    ]
+  },
+  {
+    "text": "有点胃酸，很下肢水肿，但不。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "反酸"
+      },
+      {
+        "start_idx": 13,
+        "end_idx": 17,
+        "entity": "下肢水肿"
+      }
+    ]
+  },
+  {
+    "text": "主要是呕吐，还有点。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 5,
+        "entity": "呕吐"
+      }
+    ]
+  },
+  {
+    "text": "胸闷气短，有时候还会。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "胸闷"
+      }
+    ]
+  },
+  {
+    "text": "腹部不适好几天了，一直没好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "腹痛"
+      }
+    ]
+  },
+  {
+    "text": "就是疼痛，然后出汗，没别的了。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "疼痛"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 16,
+        "entity": "出汗"
+      }
+    ]
+  },
+  {
+    "text": "感冒好了以后一直干呕，还面色苍白。",
+    "entities": [
+      {
+        "start_idx": 8,
+        "end_idx": 10,
+        "entity": "呕吐"
+      },
+      {
+        "start_idx": 19,
+        "end_idx": 23,
+        "entity": "面色苍白"
+      }
+    ]
+  },
+  {
+    "text": "我最近颈椎痛，挺难受的。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 6,
+        "entity": "颈部僵硬"
+      }
+    ]
+  },
+  {
+    "text": "从昨天开始想吐，越来越严重。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 7,
+        "entity": "恶心"
+      }
+    ]
+  },
+  {
+    "text": "其实主要是胸骨后疼痛，偶尔，不太。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 10,
+        "entity": "胸骨后疼痛"
+      }
+    ]
+  },
+  {
+    "text": "运动后流泪加重，休息时嗜睡。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 5,
+        "entity": "流泪"
+      },
+      {
+        "start_idx": 18,
+        "end_idx": 20,
+        "entity": "意识障碍"
+      }
+    ]
+  },
+  {
+    "text": "打嚏喷好几天了，一直没好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 3,
+        "entity": "打喷嚏"
+      }
+    ]
+  },
+  {
+    "text": "其实主要是皮疹，偶尔咽痛，不太黑便。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 7,
+        "entity": "皮疹"
+      },
+      {
+        "start_idx": 17,
+        "end_idx": 19,
+        "entity": "咽痛"
+      },
+      {
+        "start_idx": 30,
+        "end_idx": 32,
+        "entity": "便血"
+      }
+    ]
+  },
+  {
+    "text": "医生，我鼻子不通，劳力性气短，这种情况怎么办？",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 8,
+        "entity": "鼻塞"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 19,
+        "entity": "心悸气短"
+      }
+    ]
+  },
+  {
+    "text": "吃完饭后胸部压迫感，过一会复视。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 9,
+        "entity": "胸闷"
+      },
+      {
+        "start_idx": 17,
+        "end_idx": 19,
+        "entity": "复视"
+      }
+    ]
+  },
+  {
+    "text": "最近压力大，嗓子疼和都犯了。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 9,
+        "entity": "喉咙痛"
+      }
+    ]
+  },
+  {
+    "text": "请问鼻子堵，伴随着发烧，是什么问题？",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 5,
+        "entity": "鼻塞"
+      },
+      {
+        "start_idx": 15,
+        "end_idx": 17,
+        "entity": "发热"
+      }
+    ]
+  },
+  {
+    "text": "主要是记不住事，还有点后背痛。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 7,
+        "entity": "记忆力下降"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 19,
+        "entity": "背痛"
+      }
+    ]
+  },
+  {
+    "text": "我最近流黄涕，挺难受的。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 6,
+        "entity": "流鼻涕"
+      }
+    ]
+  },
+  {
+    "text": "请问喉咙疼，伴随着张口困难，是什么问题？",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 5,
+        "entity": "喉咙痛"
+      },
+      {
+        "start_idx": 15,
+        "end_idx": 19,
+        "entity": "张口困难"
+      }
+    ]
+  },
+  {
+    "text": "我最近腰疼，挺难受的。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 5,
+        "entity": "腰痛"
+      }
+    ]
+  },
+  {
+    "text": "大概一周了，腹泻和鼻子不通断断续续的。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 8,
+        "entity": "腹泻"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 20,
+        "entity": "鼻塞"
+      }
+    ]
+  },
+  {
+    "text": "大便带血特别严重，咽痛倒是轻微。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "便血"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 16,
+        "entity": "咽痛"
+      }
+    ]
+  },
+  {
+    "text": "刚开始只是颈部痉挛，后来排便困难也出现了。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 9,
+        "entity": "颈部痉挛"
+      },
+      {
+        "start_idx": 17,
+        "end_idx": 21,
+        "entity": "便秘"
+      }
+    ]
+  },
+  {
+    "text": "其实主要是腿疼，偶尔鼻涕，不太昏迷。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 7,
+        "entity": "腿部疼痛"
+      },
+      {
+        "start_idx": 17,
+        "end_idx": 19,
+        "entity": "流鼻涕"
+      },
+      {
+        "start_idx": 30,
+        "end_idx": 32,
+        "entity": "意识障碍"
+      }
+    ]
+  },
+  {
+    "text": "最难受的就是没力气，倒还好。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 9,
+        "entity": "乏力"
+      }
+    ]
+  },
+  {
+    "text": "其实主要是嗓子痛，偶尔，不太。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 8,
+        "entity": "咽痛"
+      }
+    ]
+  },
+  {
+    "text": "早上起来下肢疼痛，到了晚上听力下降。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 8,
+        "entity": "腿部疼痛"
+      },
+      {
+        "start_idx": 18,
+        "end_idx": 22,
+        "entity": "听力下降"
+      }
+    ]
+  },
+  {
+    "text": "感觉尿道刺痛，另外大便带血也比较明显。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "尿痛"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 18,
+        "entity": "便血"
+      }
+    ]
+  },
+  {
+    "text": "这几天迎风流泪得厉害，惊厥也有。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 7,
+        "entity": "流泪"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 18,
+        "entity": "抽搐"
+      }
+    ]
+  },
+  {
+    "text": "我妈嘴角下垂，我爸也，遗传的吗？",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "口眼歪斜"
+      }
+    ]
+  },
+  {
+    "text": "早上起来肚子胀，到了晚上不想吃饭。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 7,
+        "entity": "腹胀"
+      },
+      {
+        "start_idx": 18,
+        "end_idx": 22,
+        "entity": "食欲不振"
+      }
+    ]
+  },
+  {
+    "text": "喜欢喝水好几天了，一直没好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "多饮"
+      }
+    ]
+  },
+  {
+    "text": "有点体温升高，很打嗝，但不。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "发热"
+      },
+      {
+        "start_idx": 13,
+        "end_idx": 15,
+        "entity": "打嗝"
+      }
+    ]
+  },
+  {
+    "text": "感觉浮肿，另外也比较明显。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "水肿"
+      }
+    ]
+  },
+  {
+    "text": "早上起来口渴，到了晚上紧张不安。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 6,
+        "entity": "多饮"
+      },
+      {
+        "start_idx": 18,
+        "end_idx": 22,
+        "entity": "焦虑"
+      }
+    ]
+  },
+  {
+    "text": "喉咙疼，，晚上都睡不好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 3,
+        "entity": "喉咙痛"
+      }
+    ]
+  },
+  {
+    "text": "头晕特别严重，发热倒是轻微。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 2,
+        "entity": "头晕"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 16,
+        "entity": "发热"
+      }
+    ]
+  },
+  {
+    "text": "老是颈部僵硬，反反复复的。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "颈部僵硬"
+      }
+    ]
+  },
+  {
+    "text": "最难受的就是胸骨后疼痛，倒还好。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 11,
+        "entity": "胸骨后疼痛"
+      }
+    ]
+  },
+  {
+    "text": "现实感丧失，而且，要挂哪个科？",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 5,
+        "entity": "现实感丧失"
+      }
+    ]
+  },
+  {
+    "text": "从昨天开始心悸，越来越严重。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 7,
+        "entity": "心悸"
+      }
+    ]
+  },
+  {
+    "text": "痰量增多好几天了，一直没好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "痰量增多"
+      }
+    ]
+  },
+  {
+    "text": "关节肿胀，有时候还会淋巴结肿大。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "关节肿胀"
+      },
+      {
+        "start_idx": 15,
+        "end_idx": 20,
+        "entity": "淋巴结肿大"
+      }
+    ]
+  },
+  {
+    "text": "最近压力大，不能动和都犯了。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 9,
+        "entity": "活动受限"
+      }
+    ]
+  },
+  {
+    "text": "就是阴道出血，然后腰痛，没别的了。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "阴道出血"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 16,
+        "entity": "腰痛"
+      }
+    ]
+  },
+  {
+    "text": "医生，我痰多，心悸气短，这种情况怎么办？",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 6,
+        "entity": "咳痰"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 18,
+        "entity": "心悸气短"
+      }
+    ]
+  },
+  {
+    "text": "我最近胸痛(心前区)，挺难受的。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 10,
+        "entity": "胸痛(心前区)"
+      }
+    ]
+  },
+  {
+    "text": "大概一周了，面部水肿和全身酸痛断断续续的。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 10,
+        "entity": "面部水肿"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 20,
+        "entity": "肌肉痛"
+      }
+    ]
+  },
+  {
+    "text": "早上起来小便次数多，到了晚上全身痒。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 9,
+        "entity": "尿频"
+      },
+      {
+        "start_idx": 18,
+        "end_idx": 21,
+        "entity": "瘙痒"
+      }
+    ]
+  },
+  {
+    "text": "主要是口眼歪斜，还有点胸口痛。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 7,
+        "entity": "口眼歪斜"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 19,
+        "entity": "胸痛"
+      }
+    ]
+  },
+  {
+    "text": "老是鼻水，反反复复的。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "流鼻涕"
+      }
+    ]
+  },
+  {
+    "text": "最近压力大，发冷和尿量多都犯了。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 8,
+        "entity": "寒战"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 19,
+        "entity": "多尿"
+      }
+    ]
+  },
+  {
+    "text": "吞咽困难，而且，要挂哪个科？",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "吞咽困难"
+      }
+    ]
+  },
+  {
+    "text": "大概一周了，心慌不安和断断续续的。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 10,
+        "entity": "焦虑"
+      }
+    ]
+  },
+  {
+    "text": "医生，我脖子硬，，这种情况怎么办？",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 7,
+        "entity": "颈部僵硬"
+      }
+    ]
+  },
+  {
+    "text": "早上起来面部潮红，到了晚上。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 8,
+        "entity": "面部潮红"
+      }
+    ]
+  },
+  {
+    "text": "有点皮肤瘙痒，很足部疼痛，但不。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "皮肤瘙痒"
+      },
+      {
+        "start_idx": 13,
+        "end_idx": 17,
+        "entity": "脚部疼痛"
+      }
+    ]
+  },
+  {
+    "text": "早上起来下肢无力，到了晚上动不了。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 8,
+        "entity": "下肢无力"
+      },
+      {
+        "start_idx": 18,
+        "end_idx": 21,
+        "entity": "活动受限"
+      }
+    ]
+  },
+  {
+    "text": "我最近端坐呼吸，挺难受的。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 7,
+        "entity": "端坐呼吸"
+      }
+    ]
+  },
+  {
+    "text": "胸痛(心前区)，有时候还会甲状腺肿。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 7,
+        "entity": "胸痛(心前区)"
+      },
+      {
+        "start_idx": 15,
+        "end_idx": 19,
+        "entity": "颈部肿块"
+      }
+    ]
+  },
+  {
+    "text": "最难受的就是口舌干燥，倒还好。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 10,
+        "entity": "口干"
+      }
+    ]
+  },
+  {
+    "text": "我最近后脑痛，挺难受的。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 6,
+        "entity": "头痛"
+      }
+    ]
+  },
+  {
+    "text": "请问反应迟钝，伴随着睡不好，是什么问题？",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "意识障碍"
+      },
+      {
+        "start_idx": 15,
+        "end_idx": 18,
+        "entity": "失眠"
+      }
+    ]
+  },
+  {
+    "text": "请问睡觉出汗，伴随着鼻痒喷嚏，是什么问题？",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "夜间盗汗"
+      },
+      {
+        "start_idx": 15,
+        "end_idx": 19,
+        "entity": "打喷嚏"
+      }
+    ]
+  },
+  {
+    "text": "刚开始只是干呕，后来体重下降也出现了。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 7,
+        "entity": "呕吐"
+      },
+      {
+        "start_idx": 17,
+        "end_idx": 21,
+        "entity": "体重下降"
+      }
+    ]
+  },
+  {
+    "text": "牙痛特别严重，倒是轻微。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 2,
+        "entity": "牙痛"
+      }
+    ]
+  },
+  {
+    "text": "颈部痉挛特别严重，下肢肿倒是轻微。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "颈部痉挛"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 17,
+        "entity": "水肿"
+      }
+    ]
+  },
+  {
+    "text": "我妈鼻子不通气，我爸也，遗传的吗？",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 7,
+        "entity": "鼻塞"
+      }
+    ]
+  },
+  {
+    "text": "感觉食欲不振，另外也比较明显。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "食欲不振"
+      }
+    ]
+  },
+  {
+    "text": "其实主要是口疮，偶尔，不太。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 7,
+        "entity": "口腔溃疡"
+      }
+    ]
+  },
+  {
+    "text": "颈部僵硬，排尿痛，晚上都睡不好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "颈部僵硬"
+      },
+      {
+        "start_idx": 10,
+        "end_idx": 13,
+        "entity": "尿痛"
+      }
+    ]
+  },
+  {
+    "text": "吃完饭后喷嚏，过一会。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 6,
+        "entity": "喷嚏"
+      }
+    ]
+  },
+  {
+    "text": "就是乏力，然后腰疼，没别的了。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "乏力"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 16,
+        "entity": "腰痛"
+      }
+    ]
+  },
+  {
+    "text": "我妈鼻翼煽动，我爸也，遗传的吗？",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "鼻翼煽动"
+      }
+    ]
+  },
+  {
+    "text": "刚开始只是打喷嚏，后来也出现了。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 8,
+        "entity": "打喷嚏"
+      }
+    ]
+  },
+  {
+    "text": "血便，而且气促，要挂哪个科？",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 2,
+        "entity": "便血"
+      },
+      {
+        "start_idx": 12,
+        "end_idx": 14,
+        "entity": "呼吸困难"
+      }
+    ]
+  },
+  {
+    "text": "就是关节肿胀，然后，没别的了。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "关节肿胀"
+      }
+    ]
+  },
+  {
+    "text": "胸痛特别严重，疼痛加重因素倒是轻微。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 2,
+        "entity": "胸痛"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 20,
+        "entity": "疼痛加重因素"
+      }
+    ]
+  },
+  {
+    "text": "崴脚好几天了，一直没好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 2,
+        "entity": "扭伤"
+      }
+    ]
+  },
+  {
+    "text": "老是腹部隆起，反反复复的。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "腹部隆起"
+      }
+    ]
+  },
+  {
+    "text": "请问脖子粗，伴随着浑身没劲，是什么问题？",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 5,
+        "entity": "颈部肿块"
+      },
+      {
+        "start_idx": 15,
+        "end_idx": 19,
+        "entity": "乏力"
+      }
+    ]
+  },
+  {
+    "text": "牙髓痛，出汗异常，晚上都睡不好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 3,
+        "entity": "牙痛"
+      },
+      {
+        "start_idx": 10,
+        "end_idx": 14,
+        "entity": "出汗异常"
+      }
+    ]
+  },
+  {
+    "text": "早上起来牙疼，到了晚上夜尿多。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 6,
+        "entity": "牙痛"
+      },
+      {
+        "start_idx": 18,
+        "end_idx": 21,
+        "entity": "多尿"
+      }
+    ]
+  },
+  {
+    "text": "胸骨后疼痛，有时候还会胸骨后痛。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 5,
+        "entity": "胸骨后疼痛"
+      },
+      {
+        "start_idx": 15,
+        "end_idx": 19,
+        "entity": "胸痛"
+      }
+    ]
+  },
+  {
+    "text": "医生，我胸口闷，腿部疼痛，这种情况怎么办？",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 7,
+        "entity": "胸闷"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 18,
+        "entity": "腿部疼痛"
+      }
+    ]
+  },
+  {
+    "text": "主要是面部压痛，还有点动不了。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 7,
+        "entity": "面部压痛"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 19,
+        "entity": "活动受限"
+      }
+    ]
+  },
+  {
+    "text": "感觉肌痛，另外也比较明显。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "肌肉痛"
+      }
+    ]
+  },
+  {
+    "text": "颈痛，而且肌肉痛，要挂哪个科？",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 2,
+        "entity": "颈部僵硬"
+      },
+      {
+        "start_idx": 12,
+        "end_idx": 15,
+        "entity": "肌肉痛"
+      }
+    ]
+  },
+  {
+    "text": "鼻堵，而且，要挂哪个科？",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 2,
+        "entity": "鼻塞"
+      }
+    ]
+  },
+  {
+    "text": "这几天心跳不齐得厉害，鼻痒也有。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 7,
+        "entity": "心悸"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 18,
+        "entity": "鼻痒"
+      }
+    ]
+  },
+  {
+    "text": "刚开始只是心悸气短，后来也出现了。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 9,
+        "entity": "心悸气短"
+      }
+    ]
+  },
+  {
+    "text": "最难受的就是拉肚子，流涕倒还好。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 9,
+        "entity": "腹泻"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 18,
+        "entity": "流鼻涕"
+      }
+    ]
+  },
+  {
+    "text": "老是肿了，反反复复的。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "肿胀"
+      }
+    ]
+  },
+  {
+    "text": "最近压力大，泪多和食欲不振都犯了。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 8,
+        "entity": "流泪"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 20,
+        "entity": "食欲不振"
+      }
+    ]
+  },
+  {
+    "text": "早上起来口腔溃疡，到了晚上。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 8,
+        "entity": "口腔溃疡"
+      }
+    ]
+  },
+  {
+    "text": "急性发作疼痛，淤青，晚上都睡不好。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 6,
+        "entity": "急性发作疼痛"
+      },
+      {
+        "start_idx": 10,
+        "end_idx": 12,
+        "entity": "瘀斑"
+      }
+    ]
+  },
+  {
+    "text": "就是喷射性呕吐，然后鼻子不通气，没别的了。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 7,
+        "entity": "呕吐"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 19,
+        "entity": "鼻塞"
+      }
+    ]
+  },
+  {
+    "text": "大概一周了，接触性出血和呼吸困难断断续续的。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 11,
+        "entity": "阴道出血"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 20,
+        "entity": "呼吸困难"
+      }
+    ]
+  },
+  {
+    "text": "从昨天开始颈部包块，越来越严重。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 9,
+        "entity": "颈部肿块"
+      }
+    ]
+  },
+  {
+    "text": "我妈颈痛，我爸也，遗传的吗？",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "颈部僵硬"
+      }
+    ]
+  },
+  {
+    "text": "脚痛，而且，要挂哪个科？",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 2,
+        "entity": "脚部疼痛"
+      }
+    ]
+  },
+  {
+    "text": "吃完饭后脚部疼痛，过一会。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 8,
+        "entity": "脚部疼痛"
+      }
+    ]
+  },
+  {
+    "text": "我最近面部水肿，挺难受的。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 7,
+        "entity": "面部水肿"
+      }
+    ]
+  },
+  {
+    "text": "大概一周了，淤青和腹部胀满断断续续的。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 8,
+        "entity": "瘀斑"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 20,
+        "entity": "腹胀"
+      }
+    ]
+  },
+  {
+    "text": "感觉鼻翼煽动，另外四肢抽动也比较明显。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "鼻翼煽动"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 18,
+        "entity": "抽搐"
+      }
+    ]
+  },
+  {
+    "text": "从昨天开始下肢水肿，越来越严重。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 9,
+        "entity": "下肢水肿"
+      }
+    ]
+  },
+  {
+    "text": "活动受限，有时候还会。",
+    "entities": [
+      {
+        "start_idx": 0,
+        "end_idx": 4,
+        "entity": "活动受限"
+      }
+    ]
+  },
+  {
+    "text": "感冒好了以后一直下肢水肿，还。",
+    "entities": [
+      {
+        "start_idx": 8,
+        "end_idx": 12,
+        "entity": "下肢水肿"
+      }
+    ]
+  },
+  {
+    "text": "这几天关节痛得厉害，失眠也有。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 6,
+        "entity": "关节痛"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 18,
+        "entity": "失眠"
+      }
+    ]
+  },
+  {
+    "text": "早上起来肌肉痛，到了晚上耳痛。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 7,
+        "entity": "肌肉痛"
+      },
+      {
+        "start_idx": 18,
+        "end_idx": 20,
+        "entity": "耳痛"
+      }
+    ]
+  },
+  {
+    "text": "我最近食欲不振，挺难受的。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 7,
+        "entity": "食欲不振"
+      }
+    ]
+  },
+  {
+    "text": "刚开始只是尿频，后来发热也出现了。",
+    "entities": [
+      {
+        "start_idx": 5,
+        "end_idx": 7,
+        "entity": "尿频"
+      },
+      {
+        "start_idx": 17,
+        "end_idx": 19,
+        "entity": "发热"
+      }
+    ]
+  },
+  {
+    "text": "早上起来头疼，到了晚上。",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 6,
+        "entity": "头痛"
+      }
+    ]
+  },
+  {
+    "text": "就是夜尿多，然后盗汗，没别的了。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 5,
+        "entity": "多尿"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 16,
+        "entity": "盗汗"
+      }
+    ]
+  },
+  {
+    "text": "医生，我皮肤发黄，血便，这种情况怎么办？",
+    "entities": [
+      {
+        "start_idx": 4,
+        "end_idx": 8,
+        "entity": "黄疸"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 16,
+        "entity": "便血"
+      }
+    ]
+  },
+  {
+    "text": "感觉四肢抽动，另外意识障碍也比较明显。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "抽搐"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 18,
+        "entity": "意识障碍"
+      }
+    ]
+  },
+  {
+    "text": "这几天大便干结得厉害，腰肌痛也有。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 7,
+        "entity": "便秘"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 19,
+        "entity": "腰痛"
+      }
+    ]
+  },
+  {
+    "text": "我妈乏力，我爸也，遗传的吗？",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "乏力"
+      }
+    ]
+  },
+  {
+    "text": "就是体重下降，然后嘴角下垂，没别的了。",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 6,
+        "entity": "体重下降"
+      },
+      {
+        "start_idx": 14,
+        "end_idx": 18,
+        "entity": "口眼歪斜"
+      }
+    ]
+  },
+  {
+    "text": "我妈红肿，我爸也，遗传的吗？",
+    "entities": [
+      {
+        "start_idx": 2,
+        "end_idx": 4,
+        "entity": "肿胀"
+      }
+    ]
+  },
+  {
+    "text": "这几天腹部胀满得厉害，足部疼痛也有。",
+    "entities": [
+      {
+        "start_idx": 3,
+        "end_idx": 7,
+        "entity": "腹胀"
+      },
+      {
+        "start_idx": 16,
+        "end_idx": 20,
+        "entity": "脚部疼痛"
+      }
+    ]
+  },
+  {
+    "text": "大概一周了，全身水肿和断断续续的。",
+    "entities": [
+      {
+        "start_idx": 6,
+        "end_idx": 10,
+        "entity": "全身水肿"
+      }
+    ]
+  }
+]
