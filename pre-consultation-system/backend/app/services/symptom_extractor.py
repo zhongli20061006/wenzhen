@@ -91,15 +91,22 @@ def extract_bert(text: str) -> list[dict]:
             db.close()
 
 
-def _fuzzy_contains(query: str, text: str) -> bool:
+def _fuzzy_contains(query: str, text: str, max_gap: int = 8) -> bool:
     """检查 query 的所有字符是否按顺序出现在 text 中（允许间隔）。
-    用于匹配口语化表达如 '胸闷' -> '胸口有点闷'，'嗓子疼' -> '嗓子也疼'。"""
+    用于匹配口语化表达如 '胸闷' -> '胸口有点闷'，'嗓子疼' -> '嗓子也疼'。
+    max_gap 限制相邻匹配字符间的最大距离，防止跨短语误匹配
+    （如 '头痛' 不应从 '头皮...一按就痛' 中匹配）."""
     if len(query) <= 1:
         return query in text
     pos = 0
+    last_match_idx = -1
     for i, ch in enumerate(text):
         if ch == query[pos]:
+            # 检查与前一个匹配字符的间距（跳过第一个字符）
+            if last_match_idx >= 0 and i - last_match_idx > max_gap:
+                continue
             pos += 1
+            last_match_idx = i
             if pos == len(query):
                 return True
     return False

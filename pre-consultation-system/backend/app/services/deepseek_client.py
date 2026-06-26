@@ -51,19 +51,32 @@ def is_available() -> bool:
 
 
 def _parse_json_response(content: str, default: dict) -> dict:
-    json_match = re.search(r'\{[^{}]*\}', content, re.DOTALL)
-    if json_match:
-        try:
-            return json.loads(json_match.group(0))
-        except json.JSONDecodeError:
-            pass
+    # 策略1: 找最外层完整 JSON（处理嵌套对象/数组）
     brace_start = content.find('{')
     brace_end = content.rfind('}')
     if brace_start >= 0 and brace_end > brace_start:
         try:
             return json.loads(content[brace_start:brace_end + 1])
         except json.JSONDecodeError:
-            logger.warning("DeepSeek JSON 解析失败, 原文: %s", content[:200])
+            pass
+
+    # 策略2: 正则匹配扁平 JSON（向后兼容不含嵌套的旧 prompt）
+    json_match = re.search(r'\{[^{}]*\}', content, re.DOTALL)
+    if json_match:
+        try:
+            return json.loads(json_match.group(0))
+        except json.JSONDecodeError:
+            pass
+
+    # 策略3: 尝试提取 JSON 代码块
+    code_match = re.search(r'```(?:json)?\s*([\s\S]*?)```', content)
+    if code_match:
+        try:
+            return json.loads(code_match.group(1).strip())
+        except json.JSONDecodeError:
+            pass
+
+    logger.warning("DeepSeek JSON 解析失败, 原文前200字: %s", content[:200])
     return default
 
 
