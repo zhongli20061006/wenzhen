@@ -7,16 +7,16 @@
         <h1 class="login-title">智能预问诊系统</h1>
         <p class="login-subtitle">AI 驱动的症状分析与科室推荐</p>
       </div>
-      <el-form ref="formRef" :model="form" :rules="rules" label-position="top" class="login-form">
+      <el-form ref="formRef" :model="form" :rules="rules" label-position="top" class="login-form" autocomplete="off">
         <el-form-item label="用户名" prop="username">
-          <el-input v-model="form.username" placeholder="请输入用户名">
+          <el-input v-model="form.username" autocomplete="off" placeholder="请输入用户名">
             <template #prefix>
               <el-icon><User /></el-icon>
             </template>
           </el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input v-model="form.password" type="password" show-password placeholder="请输入密码">
+          <el-input v-model="form.password" type="password" autocomplete="new-password" show-password placeholder="请输入密码">
             <template #prefix>
               <el-icon><Lock /></el-icon>
             </template>
