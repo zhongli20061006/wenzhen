@@ -1,0 +1,44 @@
+# Python 运行时
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# 虚拟环境
+.venv/
+venv/
+env/
+
+# 环境变量（不要打包进镜像）
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# 日志
+logs/
+*.log
+
+# NER 模型输出
+model/output/
+model/data/
+
+# 测试
+tests/
+.pytest_cache/
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# 系统
+.DS_Store
+Thumbs.db

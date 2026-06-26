@@ -61,9 +61,11 @@
 
 ### 前置条件
 
-- Python 3.11+
-- MySQL 8.0（或 Docker）
-- Node.js 18+（前端）
+- **Docker**（推荐，一键部署，无需安装 Python/MySQL/Node）
+- 或手动安装：
+  - Python 3.11+
+  - MySQL 8.0
+  - Node.js 18+（前端）
 
 ### 方式一：本地开发
 
@@ -109,14 +111,59 @@ python start.py backend    # 启动后端（自动检查依赖、初始化种子
 python start.py frontend   # 启动前端
 ```
 
-### 方式三：Docker Compose
+### 方式三：Docker Compose（推荐）
+
+前置条件：安装 [Docker](https://docs.docker.com/get-docker/) 和 Docker Compose。
 
 ```bash
+# 1. 创建环境变量文件
 cd pre-consultation-system
-docker-compose up -d
-# Backend → http://localhost:8000
-# Frontend → http://localhost:5173
-# MySQL → localhost:3307
+cp .env.docker .env
+
+# 2. 编辑 .env — 至少设置 DB_PASSWORD 和 JWT_SECRET
+#    JWT_SECRET 生成方式: python -c "import secrets; print(secrets.token_hex(32))"
+
+# 3. 一键启动全部服务（MySQL + Backend + Frontend）
+docker compose up -d
+
+# 4. 查看日志（可选）
+docker compose logs -f backend
+
+# 5. 停止服务
+docker compose down
+```
+
+> 首次启动约需 2-5 分钟（拉取镜像 + 构建 + MySQL 初始化 + 种子数据导入）。
+
+**服务地址：**
+
+| 服务 | 地址 | 端口（可配） |
+|---|---|---|
+| 前端 | http://localhost:5173 | `FRONTEND_PORT` |
+| 后端 API | http://localhost:8000 | `BACKEND_PORT` |
+| Swagger 文档 | http://localhost:8000/docs | — |
+| MySQL | localhost:3307 | `DB_EXTERNAL_PORT` |
+
+**启动流程：**
+```
+docker compose up -d
+  ├─ MySQL 启动 → healthcheck 通过
+  ├─ Backend entrypoint:
+  │   1. 等待 MySQL 就绪（最多 60 秒）
+  │   2. 种子数据初始化（幂等：已有数据则跳过）
+  │   3. 启动安全检查（startup_check.py）
+  │   4. uvicorn --workers 2
+  └─ Frontend: 等待 backend healthy → Nginx 启动
+```
+
+**常用命令：**
+```bash
+docker compose up -d              # 启动
+docker compose ps                 # 查看状态
+docker compose logs -f backend    # 查看后端日志
+docker compose restart backend    # 重启后端
+docker compose down               # 停止并删除容器
+docker compose down -v            # 停止并删除容器+数据卷（⚠ 会清空数据库）
 ```
 
 ### 测试账户
@@ -134,7 +181,11 @@ docker-compose up -d
 ```
 pre-consultation-system/
 ├── docker-compose.yml              # MySQL + Backend + Frontend
+├── .env.docker                     # Docker 部署环境变量模板
 ├── backend/
+│   ├── Dockerfile                  # 后端 Docker 镜像
+│   ├── docker-entrypoint.sh        # 容器启动入口（等待DB→种子→启动）
+│   ├── .dockerignore               # Docker 构建排除文件
 │   ├── app/
 │   │   ├── main.py                 # FastAPI 入口，CORS，限流，日志，会话清理
 │   │   ├── config.py               # Pydantic Settings（环境变量驱动）
@@ -171,6 +222,9 @@ pre-consultation-system/
 │   ├── startup_check.py            # 生产就绪检查脚本
 │   └── requirements.txt
 └── frontend/
+    ├── Dockerfile                  # 前端 Docker 镜像（多阶段：Node构建→Nginx运行）
+    ├── nginx.conf                  # Nginx 配置（静态资源 + /api 反向代理）
+    ├── .dockerignore               # Docker 构建排除文件
     └── src/
         ├── views/
         │   ├── patient/    # Consultation.vue, Result.vue, RegistrationConfirm.vue
