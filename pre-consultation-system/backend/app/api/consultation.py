@@ -35,6 +35,11 @@ from app.services.reasoning_engine import (
 )
 from app.services.final_scorer import fuse_scores, degrade_only
 from app.services.deepseek_client import is_available, rank_diseases, suggest_next_question
+from app.services.deepseek_client import (
+    extract_and_initial_question,
+    next_question as ds_next_question,
+    final_recommendation as ds_final_recommendation,
+)
 
 router = APIRouter(dependencies=[Depends(get_current_user)])
 local_limiter = Limiter(key_func=get_remote_address)
@@ -101,242 +106,392 @@ async def _select_next_symptom(
     return rule_result
 
 
-@router.post("/start")
-async def start_consultation(req: StartConsultationRequest, current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
-    session_id = str(uuid.uuid4())
+# ============================================================
+#  精简线性问诊 — DeepSeek 驱动，一次提取、逐轮收窄
+# ============================================================
 
-    symptom_matches = []
-    if req.description:
-        desc_matches = await extract_from_description_async(req.description, db)
-        symptom_matches.extend(desc_matches)
-    for raw in req.symptoms:
-        matches = standardize_symptoms(raw, db)
-        if matches:
-            symptom_matches.extend(matches)
+def _parse_duration(req: StartConsultationRequest) -> int | None:
+    """解析病程天数"""
+    if req.duration:
+        m = re.match(r'(\d+)\s*(天|周|个月|日)', req.duration)
+        if m:
+            n, unit = int(m.group(1)), m.group(2)
+            if unit == '周': return n * 7
+            if unit == '个月': return n * 30
+            return n
+    if req.onset_date:
+        try:
+            return (date.today() - date.fromisoformat(req.onset_date)).days
+        except ValueError:
+            pass
+    return None
 
-    symptom_names = list({m["symptom_name"] for m in symptom_matches})
-    logger.info("开始问诊 session=%s, patient=%s, 初始症状=%s",
-                 session_id, current_user.get("username", "?"), symptom_names)
-    if not symptom_names:
-        # 三层提取（NER + 关键词 + DeepSeek保底）均失败
-        from app.services.deepseek_client import is_available as ds_avail
-        hint = "请用更详细的语言描述您的症状（如'头痛三天伴有发热'）"
-        if not ds_avail():
-            hint = "系统当前未启用 AI 辅助，请从症状列表手动选择，或联系管理员配置 DeepSeek API Key。" + hint
-        logger.warning("问诊启动失败: 三层提取均未识别到有效症状, patient=%s, description_len=%d",
-                        current_user.get("username", "?"), len(req.description or ""))
-        raise HTTPException(status_code=400, detail=f"未能从您的描述中识别出有效症状。{hint}")
 
-    collected_data = {
+def _init_collected_data(req: StartConsultationRequest, symptom_names: list[str]) -> dict:
+    """构建 collected_data 初始结构"""
+    return {
+        "description": req.description or "",
         "symptoms": {name: True for name in symptom_names},
-        "onset_days": None,
+        "onset_days": _parse_duration(req),
         "severity": req.severity,
         "medical_history": req.medical_history or [],
         "current_medications": req.current_medications or [],
         "allergies": req.allergies or [],
+        "conversation": [],
     }
 
-    if req.onset_date:
-        try:
-            onset = date.fromisoformat(req.onset_date)
-            collected_data["onset_days"] = (date.today() - onset).days
-        except ValueError:
-            pass
 
-    if req.duration:
-        m = re.match(r'(\d+)\s*(天|周|个月|日)', req.duration)
-        if m:
-            n = int(m.group(1))
-            unit = m.group(2)
-            if unit in ('周',):
-                collected_data["onset_days"] = n * 7
-            elif unit in ('个月',):
-                collected_data["onset_days"] = n * 30
-            else:
-                collected_data["onset_days"] = n
-        else:
-            collected_data["duration_text"] = req.duration
+def _record_answer(collected: dict, symptom_name: str, answer: str) -> dict:
+    """增量记录本轮回答到 collected_data"""
+    conv = list(collected.get("conversation", []))
+    conv.append({"symptom": symptom_name, "answer": answer})
+    collected["conversation"] = conv
+    symptoms = dict(collected.get("symptoms", {}))
+    if answer == "YES":
+        symptoms[symptom_name] = True
+    elif answer == "NO":
+        symptoms[symptom_name] = False
+    elif answer == "UNKNOWN":
+        symptoms[symptom_name] = None
+    collected["symptoms"] = symptoms
+    return collected
 
-    candidates = calculate_disease_scores(collected_data, db)
-    candidates = prune_by_required(candidates)
-    candidates = apply_differential_rules(candidates, collected_data, db)
 
-    session = ConsultationSession(
-        id=session_id,
-        patient_id=current_user["username"],
-        status=SessionStatus.QUESTIONING,
-        current_round=0,
-        collected_data=collected_data,
-        candidate_diseases=[{
-            "disease_id": c["disease_id"],
-            "disease_name": c["disease_name"],
-            "score": c["score"],
-        } for c in candidates[:20]],
-        asked_symptoms=symptom_names,
-    )
-    db.add(session)
-    db.commit()
+@router.post("/start")
+async def start_consultation(
+    req: StartConsultationRequest,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    session_id = str(uuid.uuid4())
 
-    next_symptom = await _select_next_symptom(candidates, collected_data, symptom_names, db)
-    if next_symptom:
-        session.current_round = 1
-        question_text = _build_question_text(next_symptom["symptom_name"])
-        record = QuestionRecord(
-            consultation_id=session_id,
-            round=1,
-            symptom_id=next_symptom["symptom_id"],
-            question_text=question_text,
+    if is_available():
+        # ====== DeepSeek 快速路径 ======
+        result = await extract_and_initial_question(
+            req.description or "", req.symptoms or [], db
         )
-        db.add(record)
+        extracted = result.get("extracted_symptoms", [])
+        candidates = result.get("candidate_diseases", [])
+        first_q = result.get("question")
+
+        symptom_names = list({s["symptom_name"] for s in extracted})
+        # 合并前端标签
+        for tag in (req.symptoms or []):
+            matches = standardize_symptoms(tag, db)
+            for m in matches:
+                if m["symptom_name"] not in symptom_names:
+                    symptom_names.append(m["symptom_name"])
+
+        logger.info(
+            "[DS] 开始问诊 session=%s patient=%s symptoms=%d candidates=%d q=%s",
+            session_id, current_user.get("username", "?"),
+            len(symptom_names), len(candidates),
+            first_q["symptom_name"] if first_q else "(无)",
+        )
+
+        if not symptom_names:
+            raise HTTPException(
+                status_code=400,
+                detail="未能从您的描述中识别出有效症状。请用更详细的语言描述。",
+            )
+
+        collected_data = _init_collected_data(req, symptom_names)
+
+        session = ConsultationSession(
+            id=session_id,
+            patient_id=current_user["username"],
+            status=SessionStatus.QUESTIONING,
+            current_round=0,
+            collected_data=collected_data,
+            candidate_diseases=candidates,
+            asked_symptoms=symptom_names,
+        )
+        db.add(session)
         db.commit()
 
-        resp = {
+        if first_q and first_q.get("symptom_name"):
+            session.current_round = 1
+            q_text = first_q.get("question_text", _build_question_text(first_q["symptom_name"]))
+            record = QuestionRecord(
+                consultation_id=session_id, round=1,
+                symptom_id=first_q.get("symptom_id"),
+                question_text=q_text,
+            )
+            db.add(record)
+            db.commit()
+            return {
+                "consultation_id": session_id,
+                "question_id": record.id,
+                "question_text": q_text,
+                "symptom_id": first_q.get("symptom_id"),
+                "round": 1,
+                "total_rounds": settings.MAX_QUESTION_ROUNDS,
+                "reasoning": first_q.get("reasoning", ""),
+            }
+
+        # 没有追问，直接出结果
+        session.status = SessionStatus.RECOMMENDING
+        final = await ds_final_recommendation(
+            collected_data.get("symptoms", {}), candidates, collected_data, db
+        )
+        session.final_recommendation = final
+        db.commit()
+        return {
             "consultation_id": session_id,
-            "question_id": record.id,
-            "question_text": question_text,
-            "symptom_id": next_symptom["symptom_id"],
-            "round": 1,
-            "total_rounds": settings.MAX_QUESTION_ROUNDS,
+            "message": "直接生成推荐",
+            "result": final,
         }
-        if next_symptom.get("ds_reasoning"):
-            resp["ds_reasoning"] = next_symptom["ds_reasoning"]
-        return resp
 
-    session.status = SessionStatus.RECOMMENDING
-    result = generate_recommendation(candidates, collected_data)
-    session.final_recommendation = result
-    db.commit()
+    else:
+        # ====== 降级路径：旧规则引擎 ======
+        symptom_matches = []
+        if req.description:
+            desc_matches = await extract_from_description_async(req.description, db)
+            symptom_matches.extend(desc_matches)
+        for raw in req.symptoms:
+            matches = standardize_symptoms(raw, db)
+            if matches:
+                symptom_matches.extend(matches)
 
-    logger.info("问诊直接出推荐结果 session=%s, 候选疾病数=%d", session_id, len(candidates))
-    return {
-        "consultation_id": session_id,
-        "message": "直接生成推荐",
-        "result": result,
-    }
+        symptom_names = list({m["symptom_name"] for m in symptom_matches})
+        logger.info("[降级] 开始问诊 session=%s patient=%s symptoms=%s",
+                     session_id, current_user.get("username", "?"), symptom_names)
+        if not symptom_names:
+            raise HTTPException(
+                status_code=400,
+                detail="未识别到有效症状。系统未启用AI辅助，请从症状列表手动选择。",
+            )
+
+        collected_data = _init_collected_data(req, symptom_names)
+        candidates = calculate_disease_scores(collected_data, db)
+        candidates = prune_by_required(candidates)
+        candidates = apply_differential_rules(candidates, collected_data, db)
+
+        session = ConsultationSession(
+            id=session_id, patient_id=current_user["username"],
+            status=SessionStatus.QUESTIONING, current_round=0,
+            collected_data=collected_data,
+            candidate_diseases=[{
+                "disease_id": c["disease_id"], "disease_name": c["disease_name"],
+                "likelihood": c["score"],
+            } for c in candidates[:20]],
+            asked_symptoms=symptom_names,
+        )
+        db.add(session)
+        db.commit()
+
+        next_symptom = await _select_next_symptom(candidates, collected_data, symptom_names, db)
+        if next_symptom:
+            session.current_round = 1
+            q_text = _build_question_text(next_symptom["symptom_name"])
+            record = QuestionRecord(
+                consultation_id=session_id, round=1,
+                symptom_id=next_symptom["symptom_id"], question_text=q_text,
+            )
+            db.add(record)
+            db.commit()
+            resp = {
+                "consultation_id": session_id, "question_id": record.id,
+                "question_text": q_text, "symptom_id": next_symptom["symptom_id"],
+                "round": 1, "total_rounds": settings.MAX_QUESTION_ROUNDS,
+            }
+            if next_symptom.get("ds_reasoning"):
+                resp["ds_reasoning"] = next_symptom["ds_reasoning"]
+            return resp
+
+        session.status = SessionStatus.RECOMMENDING
+        result = generate_recommendation(candidates, collected_data)
+        session.final_recommendation = result
+        db.commit()
+        return {"consultation_id": session_id, "message": "直接生成推荐", "result": result}
 
 
 @router.post("/{consultation_id}/answer")
-@local_limiter.limit("10/minute")  # 问答接口：每分钟最多 10 次，防滥用
-async def answer_question(consultation_id: str, req: AnswerRequest, request: Request, current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
-    session = db.query(ConsultationSession).filter(ConsultationSession.id == consultation_id).first()
+@local_limiter.limit("10/minute")
+async def answer_question(
+    consultation_id: str,
+    req: AnswerRequest,
+    request: Request,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    # 基础校验
+    session = db.query(ConsultationSession).filter(
+        ConsultationSession.id == consultation_id
+    ).first()
     if not session:
         raise HTTPException(status_code=404, detail="会话不存在")
     if session.patient_id != current_user["username"]:
         raise HTTPException(status_code=403, detail="无权操作他人问诊会话")
     if session.status != SessionStatus.QUESTIONING:
         raise HTTPException(status_code=400, detail="当前状态不允许作答")
-
     if req.answer not in ("YES", "NO", "UNKNOWN"):
         raise HTTPException(status_code=400, detail="答案必须是 YES/NO/UNKNOWN")
 
-    # 加锁读取问诊会话行，防止并发修改
+    # 加锁防并发
     session = db.query(ConsultationSession).filter(
         ConsultationSession.id == consultation_id
     ).with_for_update().first()
-    if not session:
-        raise HTTPException(status_code=404, detail="会话不存在")
-    if session.patient_id != current_user["username"]:
-        raise HTTPException(status_code=403, detail="无权操作他人问诊会话")
-    if session.status != SessionStatus.QUESTIONING:
+    if not session or session.status != SessionStatus.QUESTIONING:
         raise HTTPException(status_code=400, detail="当前状态不允许作答")
 
     current_round = session.current_round
-    # 加锁读取当前问题记录，防止重复提交
     record = db.query(QuestionRecord).filter(
         QuestionRecord.consultation_id == consultation_id,
         QuestionRecord.round == current_round,
     ).with_for_update().first()
     if not record:
         raise HTTPException(status_code=400, detail="当前轮次无待回答问题")
-
     if record.answer is not None:
-        logger.warning("重复回答尝试 session=%s, round=%d", consultation_id, current_round)
         raise HTTPException(status_code=409, detail="该问题已经回答过")
 
-    logger.info("回答问诊 session=%s, round=%d, symptom_id=%d, answer=%s", consultation_id, current_round, req.symptom_id, req.answer)
-    record.answer = AnswerType(req.answer)
-    collected = dict(session.collected_data)
-    symptoms = dict(collected.get("symptoms", {}))
-
     sym = db.query(SymptomDict).filter(SymptomDict.id == req.symptom_id).first()
-    if sym:
+    sym_name = sym.name if sym else ""
+    logger.info("回答问诊 session=%s round=%d symptom=%s answer=%s",
+                 consultation_id, current_round, sym_name, req.answer)
+    record.answer = AnswerType(req.answer)
+
+    if is_available():
+        # ====== DeepSeek 快速路径 ======
+        collected = dict(session.collected_data)
+        collected = _record_answer(collected, sym_name, req.answer)
+        collected["current_round"] = current_round
+        collected["max_rounds"] = settings.MAX_QUESTION_ROUNDS
+
+        candidates = list(session.candidate_diseases or [])
+        asked = list(session.asked_symptoms or []) + [sym_name]
+        session.asked_symptoms = list(set(asked))
+
+        confirmed = [k for k, v in collected.get("symptoms", {}).items() if v is True]
+        denied = [k for k, v in collected.get("symptoms", {}).items() if v is False]
+
+        result = await ds_next_question(confirmed, denied, asked, candidates, collected, db)
+
+        if result.get("should_stop") or current_round >= settings.MAX_QUESTION_ROUNDS:
+            session.status = SessionStatus.RECOMMENDING
+            session.collected_data = collected
+            final = await ds_final_recommendation(
+                collected.get("symptoms", {}), candidates, collected, db
+            )
+            session.final_recommendation = final
+            db.commit()
+            logger.info("[DS] 问诊结束 session=%s round=%d", consultation_id, current_round)
+            return {
+                "status": "RECOMMENDING",
+                "result": final,
+                "round": current_round,
+                "total_rounds": current_round,
+            }
+
+        next_q = result.get("question")
+        if not next_q or not next_q.get("symptom_name"):
+            session.status = SessionStatus.RECOMMENDING
+            session.collected_data = collected
+            final = await ds_final_recommendation(
+                collected.get("symptoms", {}), candidates, collected, db
+            )
+            session.final_recommendation = final
+            db.commit()
+            return {
+                "status": "RECOMMENDING",
+                "result": final,
+                "round": current_round,
+                "total_rounds": current_round,
+            }
+
+        session.current_round += 1
+        session.collected_data = collected
+        session.candidate_diseases = candidates
+
+        q_text = next_q.get("question_text", _build_question_text(next_q["symptom_name"]))
+        new_record = QuestionRecord(
+            consultation_id=consultation_id,
+            round=session.current_round,
+            symptom_id=next_q.get("symptom_id"),
+            question_text=q_text,
+        )
+        db.add(new_record)
+        db.commit()
+
+        logger.info("[DS] 追问 session=%s round=%d symptom=%s",
+                     consultation_id, session.current_round, next_q["symptom_name"])
+        return {
+            "status": "QUESTIONING",
+            "question_id": new_record.id,
+            "question_text": q_text,
+            "symptom_id": next_q.get("symptom_id"),
+            "round": session.current_round,
+            "total_rounds": settings.MAX_QUESTION_ROUNDS,
+            "reasoning": next_q.get("reasoning", ""),
+        }
+
+    else:
+        # ====== 降级路径：旧规则引擎 ======
+        collected = dict(session.collected_data)
+        symptoms = dict(collected.get("symptoms", {}))
         if req.answer == "YES":
-            symptoms[sym.name] = True
+            symptoms[sym_name] = True
         elif req.answer == "NO":
-            symptoms[sym.name] = False
+            symptoms[sym_name] = False
         elif req.answer == "UNKNOWN":
-            symptoms[sym.name] = None
+            symptoms[sym_name] = None
+        collected["symptoms"] = symptoms
+        session.collected_data = collected
 
-    collected["symptoms"] = symptoms
-    session.collected_data = collected
+        candidates = calculate_disease_scores(collected, db)
+        candidates = prune_by_required(candidates)
+        candidates = apply_differential_rules(candidates, collected, db)
+        candidates = await _fuse_candidates(candidates, collected)
 
-    candidates = calculate_disease_scores(collected, db)
-    candidates = prune_by_required(candidates)
-    candidates = apply_differential_rules(candidates, collected, db)
-    candidates = await _fuse_candidates(candidates, collected)
+        asked = list(session.asked_symptoms or []) + [sym_name]
+        session.asked_symptoms = list(set(asked))
 
-    asked = list(session.asked_symptoms or [])
-    if sym:
-        asked.append(sym.name)
-    session.asked_symptoms = list(set(asked))
+        top_count = len([c for c in candidates if c["score"] > 0])
+        should_stop = (
+            top_count <= settings.CANDIDATE_THRESHOLD
+            or current_round >= settings.MAX_QUESTION_ROUNDS
+        )
 
-    top_count = len([c for c in candidates if c["score"] > 0])
-    should_stop = (
-        top_count <= settings.CANDIDATE_THRESHOLD
-        or current_round >= settings.MAX_QUESTION_ROUNDS
-    )
+        if should_stop:
+            session.status = SessionStatus.RECOMMENDING
+            result = generate_recommendation(candidates, collected)
+            session.final_recommendation = result
+            db.commit()
+            logger.info("[降级] 问诊结束 session=%s round=%d", consultation_id, current_round)
+            return {
+                "status": "RECOMMENDING", "result": result,
+                "round": current_round, "total_rounds": current_round,
+            }
 
-    if should_stop:
-        session.status = SessionStatus.RECOMMENDING
-        result = generate_recommendation(candidates, collected)
-        session.final_recommendation = result
+        session.current_round += 1
+        next_symptom = await _select_next_symptom(candidates, collected, asked, db)
+
+        if not next_symptom:
+            session.status = SessionStatus.RECOMMENDING
+            result = generate_recommendation(candidates, collected)
+            session.final_recommendation = result
+            db.commit()
+            return {
+                "status": "RECOMMENDING", "result": result,
+                "round": current_round, "total_rounds": current_round,
+            }
+
+        q_text = _build_question_text(next_symptom["symptom_name"])
+        new_record = QuestionRecord(
+            consultation_id=consultation_id, round=session.current_round,
+            symptom_id=next_symptom["symptom_id"], question_text=q_text,
+        )
+        db.add(new_record)
         db.commit()
-        logger.info("问诊结束(达到停止条件) session=%s, 候选疾病数=%d", consultation_id, top_count)
-        return {
-            "status": "RECOMMENDING",
-            "result": result,
-            "round": current_round,
-            "total_rounds": current_round,
+
+        resp = {
+            "status": "QUESTIONING", "question_id": new_record.id,
+            "question_text": q_text, "symptom_id": next_symptom["symptom_id"],
+            "round": session.current_round, "total_rounds": settings.MAX_QUESTION_ROUNDS,
         }
-
-    session.current_round += 1
-    next_symptom = await _select_next_symptom(candidates, collected, asked, db)
-
-    if not next_symptom:
-        session.status = SessionStatus.RECOMMENDING
-        result = generate_recommendation(candidates, collected)
-        session.final_recommendation = result
-        db.commit()
-        logger.info("问诊结束(无更多追问) session=%s", consultation_id)
-        return {
-            "status": "RECOMMENDING",
-            "result": result,
-            "round": current_round,
-            "total_rounds": current_round,
-        }
-
-    question_text = _build_question_text(next_symptom["symptom_name"])
-    new_record = QuestionRecord(
-        consultation_id=consultation_id,
-        round=session.current_round,
-        symptom_id=next_symptom["symptom_id"],
-        question_text=question_text,
-    )
-    db.add(new_record)
-    db.commit()
-
-    logger.info("追问下一轮 session=%s, round=%d, symptom=%s", consultation_id, session.current_round, next_symptom["symptom_name"])
-    resp = {
-        "status": "QUESTIONING",
-        "question_id": new_record.id,
-        "question_text": question_text,
-        "symptom_id": next_symptom["symptom_id"],
-        "round": session.current_round,
-        "total_rounds": settings.MAX_QUESTION_ROUNDS,
-    }
-    if next_symptom.get("ds_reasoning"):
-        resp["ds_reasoning"] = next_symptom["ds_reasoning"]
-    return resp
+        if next_symptom.get("ds_reasoning"):
+            resp["ds_reasoning"] = next_symptom["ds_reasoning"]
+        return resp
 
 
 @router.get("/{consultation_id}/result")
@@ -497,85 +652,51 @@ def available_timeslots(doctor_id: int, registration_date: str, db: Session = De
 
 
 @router.post("/pipeline-debug")
-async def pipeline_debug(req: StartConsultationRequest, current_user: dict = Depends(require_role("admin")), db: Session = Depends(get_db)):
-    """
-    降解模式全流程调试端点。返回管道的每一步结果。
-    """
-    from app.config import settings
-    from app.services.extraction_service import extract_from_description, extract_from_description_async
+async def pipeline_debug(
+    req: StartConsultationRequest,
+    current_user: dict = Depends(require_role("admin")),
+    db: Session = Depends(get_db),
+):
+    """DeepSeek 全流程调试端点。返回提取→候选→追问→推荐的每一步结果。"""
+    stages = {"ai_mode": settings.AI_MODE}
 
-    stages = {}
-    stages["ai_mode"] = settings.AI_MODE
+    if not is_available():
+        stages["error"] = "DeepSeek 不可用，无法调试新流程"
+        return stages
 
-    stages["symptom_matches"] = []
-    if req.description:
-        desc_matches = await extract_from_description_async(req.description, db)
-        stages["symptom_matches"].extend(desc_matches)
-    for raw in req.symptoms:
-        matches = standardize_symptoms(raw, db)
-        if matches:
-            stages["symptom_matches"].extend(matches)
+    # Step 1: 提取+初问
+    ds_result = await extract_and_initial_question(
+        req.description or "", req.symptoms or [], db
+    )
+    stages["extraction"] = {
+        "symptoms": [
+            {"name": s["symptom_name"], "confidence": s.get("confidence")}
+            for s in ds_result.get("extracted_symptoms", [])
+        ],
+        "candidates": [
+            {"name": c["disease_name"], "dept": c.get("department_name"), "likelihood": c.get("likelihood")}
+            for c in ds_result.get("candidate_diseases", [])
+        ],
+        "first_question": ds_result.get("question"),
+    }
 
-    symptom_names = list({m["symptom_name"] for m in stages["symptom_matches"]})
-
-    collected_data = {
-        "symptoms": {name: True for name in symptom_names},
-        "onset_days": None,
+    # Step 2: 模拟终局推荐
+    symptom_names = [s["symptom_name"] for s in ds_result.get("extracted_symptoms", [])]
+    mock_collected = {
+        "symptoms": {n: True for n in symptom_names},
         "severity": req.severity,
+        "onset_days": _parse_duration(req),
         "medical_history": req.medical_history or [],
         "current_medications": req.current_medications or [],
         "allergies": req.allergies or [],
     }
-    if req.duration:
-        m = re.match(r'(\d+)\s*(天|周|个月|日)', req.duration)
-        if m:
-            n = int(m.group(1))
-            unit = m.group(2)
-            if unit in ('周',):
-                collected_data["onset_days"] = n * 7
-            elif unit in ('个月',):
-                collected_data["onset_days"] = n * 30
-            else:
-                collected_data["onset_days"] = n
-
-    stages["collected_data"] = {k: str(v) if isinstance(v, (dict, list)) else v for k, v in collected_data.items()}
-
-    candidates = calculate_disease_scores(collected_data, db)
-    stages["initial_candidates"] = [
-        {"name": c["disease_name"], "score": c["score"], "dept": c["department_name"], "urgency": c["urgency"]}
-        for c in candidates[:10]
-    ]
-
-    candidates = prune_by_required(candidates)
-    candidates = apply_differential_rules(candidates, collected_data, db)
-    stages["after_rules"] = [
-        {"name": c["disease_name"], "score": c["score"]}
-        for c in candidates[:10]
-    ]
-
-    next_s = select_next_symptom(candidates, symptom_names, db)
-    stages["next_question"] = next_s
-
-    result = generate_recommendation(candidates, collected_data)
-    stages["recommendation"] = result
-
-    if is_available():
-        ds_result = await rank_diseases(symptom_names, candidates, collected_data)
-        ds_rankings = ds_result.get("rankings", [])
-        ds_ok = "error" not in ds_result
-        stages["deepseek_raw"] = {"success": ds_ok, "explanation": ds_result.get("explanation", "")}
-        fusion = fuse_scores(candidates, ds_rankings)
-    else:
-        fusion = degrade_only(candidates)
-    stages["final_scorer"] = {
-        "mode": fusion.get("mode", "fused"),
-        "agreement": fusion["agreement"],
-        "conflicts": fusion["conflicts"][:3],
-        "merged": [
-            {"name": m["disease_name"], "rule": m["rule_score"], "ds": m["ds_score"], "final": m["final_score"]}
-            for m in fusion["merged"][:10]
-        ],
-    }
+    final = await ds_final_recommendation(
+        mock_collected.get("symptoms", {}),
+        ds_result.get("candidate_diseases", []),
+        mock_collected,
+        db,
+    )
+    stages["final_recommendation"] = final
 
     return stages
 

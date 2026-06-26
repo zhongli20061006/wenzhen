@@ -364,5 +364,310 @@ async def extract_symptoms_from_text(description: str, db) -> list[dict]:
                 "source": "deepseek",
             })
 
-    logger.info("DeepSeek 症状提取映射: %d raw → %d mapped", len(ds_symptoms), len(results))
+    logger.info("DeepSeek 症状提取映射: %d raw -> %d mapped", len(ds_symptoms), len(results))
     return results
+
+
+# ============================================================
+#  精简线性问诊 — 一次提取、逐轮收窄、终局综合
+# ============================================================
+
+ASKING_SYSTEM_PROMPT = (
+    "你是一个专业医疗预问诊AI。你的任务是根据患者的症状描述进行追问，"
+    "最终给出科室和疾病推荐。"
+    "规则：1.绝不编造患者没提到的症状 2.追问目的是区分候选疾病"
+    "3.优先追问高鉴别力的症状 4.信息足够时主动建议停止"
+    "5.始终返回纯JSON，不要markdown代码块"
+)
+
+
+def _build_knowledge_context(db) -> str:
+    """构建症状库和疾病库的简要上下文，注入 DeepSeek prompt"""
+    from app.models.symptom_dict import SymptomDict
+    from app.models.disease import Disease
+    from app.models.department import Department
+    
+    symptoms = db.query(SymptomDict).all()
+    diseases = db.query(Disease).all()
+    depts = {d.id: d.name for d in db.query(Department).all()}
+    
+    sym_names = "、".join(s.name for s in symptoms)
+    disease_lines = []
+    for d in diseases:
+        dept_name = depts.get(d.department_id, "")
+        disease_lines.append(f"{d.name}({dept_name})")
+    disease_text = "、".join(disease_lines)
+    
+    return (
+        f"【症状库({len(symptoms)}个)】{sym_names}\n"
+        f"【疾病-科室({len(diseases)}个)】{disease_text}"
+    )
+
+
+async def _call_with_knowledge(user_prompt: str, db) -> dict:
+    """调用 DeepSeek，自动注入知识库上下文"""
+    knowledge = _build_knowledge_context(db)
+    full_prompt = f"{knowledge}\n\n{user_prompt}"
+    return await _call(full_prompt, system_prompt=ASKING_SYSTEM_PROMPT)
+
+
+def _map_ds_symptoms_to_db(ds_symptoms: list[dict], db) -> list[dict]:
+    """将 DeepSeek 返回的症状名映射到 symptom_dict ID"""
+    from app.models.symptom_dict import SymptomDict
+    symptoms = db.query(SymptomDict).all()
+    by_name = {s.name: s.id for s in symptoms}
+    by_alias = {}
+    for s in symptoms:
+        if s.aliases:
+            for a in s.aliases.split(","):
+                a = a.strip()
+                if a:
+                    by_alias[a] = s.id
+    
+    results = []
+    seen = set()
+    for ds in ds_symptoms:
+        name = ds.get("name", "").strip()
+        conf = float(ds.get("confidence", 0.8))
+        if not name or conf < 0.5:
+            continue
+        
+        sid = by_name.get(name) or by_alias.get(name)
+        if not sid:
+            for sname, sid2 in by_name.items():
+                if sname in name or name in sname:
+                    sid = sid2
+                    conf = min(conf * 0.9, 0.9)
+                    break
+        if sid and sid not in seen:
+            seen.add(sid)
+            results.append({"symptom_id": sid, "symptom_name": name, "confidence": conf, "source": "deepseek"})
+    return results
+
+
+def _map_ds_diseases_to_db(ds_diseases: list[dict], db) -> list[dict]:
+    """将 DeepSeek 返回的疾病名映射到 disease ID"""
+    from app.models.disease import Disease
+    from app.models.department import Department
+    diseases = db.query(Disease).all()
+    depts = {d.id: d.name for d in db.query(Department).all()}
+    by_name = {d.name: d for d in diseases}
+    
+    results = []
+    for ds in ds_diseases:
+        name = ds.get("name", "").strip()
+        if not name:
+            continue
+        matched = by_name.get(name)
+        if not matched:
+            for d in diseases:
+                if d.name in name or name in d.name:
+                    matched = d
+                    break
+        if matched:
+            results.append({
+                "disease_id": matched.id,
+                "disease_name": matched.name,
+                "department_id": matched.department_id,
+                "department_name": depts.get(matched.department_id, ""),
+                "likelihood": float(ds.get("likelihood", 0.7)),
+            })
+    return results
+
+
+async def extract_and_initial_question(
+    description: str,
+    symptom_tags: list[str],
+    db,
+) -> dict:
+    """
+    一次性：提取症状 + 候选疾病 + 第一个追问。
+    返回 {extracted_symptoms, candidate_diseases, question}
+    """
+    if not is_available() or not description.strip():
+        return {"extracted_symptoms": [], "candidate_diseases": [], "question": None}
+    
+    tags_text = "、".join(symptom_tags) if symptom_tags else "（无）"
+    user_prompt = (
+        f"【患者描述】{description.strip()}\n"
+        f"【前端选择的症状标签】{tags_text}\n\n"
+        "请完成：\n"
+        "1.从患者描述中提取所有医学症状，匹配到症状库中的标准名称\n"
+        "2.结合前端标签和提取的症状，找出最可能的3-5个候选疾病\n"
+        "3.选出一个最有鉴别价值的追问症状（不能是已提取/已确认的）\n\n"
+        '返回JSON：\n'
+        '{"extracted_symptoms":[{"name":"标准症状名","confidence":0.95}],'
+        '"candidate_diseases":[{"name":"疾病名","department":"科室名","likelihood":0.85}],'
+        '"question":{"symptom_name":"症状名","question_text":"您是否有XX？","reasoning":"选择理由"}}'
+    )
+    
+    result = await _call_with_knowledge(user_prompt, db)
+    if "error" in result:
+        return {"extracted_symptoms": [], "candidate_diseases": [], "question": None}
+    
+    extracted = _map_ds_symptoms_to_db(result.get("extracted_symptoms", []), db)
+    candidates = _map_ds_diseases_to_db(result.get("candidate_diseases", []), db)
+    q = result.get("question") or {}
+    
+    # 映射追问症状到 DB
+    q_symptom_id = None
+    q_name = q.get("symptom_name", "")
+    if q_name:
+        from app.models.symptom_dict import SymptomDict
+        sym = db.query(SymptomDict).filter(SymptomDict.name == q_name).first()
+        if sym:
+            q_symptom_id = sym.id
+    
+    question = {
+        "symptom_id": q_symptom_id,
+        "symptom_name": q_name,
+        "question_text": q.get("question_text", f"您是否有{q_name}的症状？"),
+        "reasoning": q.get("reasoning", ""),
+    } if q_name else None
+    
+    logger.info(
+        "DeepSeek 初始提取: symptoms=%d, candidates=%d, question=%s",
+        len(extracted), len(candidates), q_name or "(无)"
+    )
+    return {
+        "extracted_symptoms": extracted,
+        "candidate_diseases": candidates,
+        "question": question,
+    }
+
+
+async def next_question(
+    confirmed: list[str],
+    denied: list[str],
+    asked: list[str],
+    candidates: list[dict],
+    collected_data: dict,
+    db,
+) -> dict:
+    """
+    基于当前累积状态，让 DeepSeek 决定下一个追问或停止。
+    返回 {question, should_stop}
+    """
+    if not is_available():
+        return {"question": None, "should_stop": True}
+    
+    confirmed_text = "、".join(confirmed) if confirmed else "（无）"
+    denied_text = "、".join(denied) if denied else "（无）"
+    asked_text = "、".join(asked) if asked else "（无）"
+    
+    candidate_text = "\n".join(
+        f"- {c['disease_name']}({c.get('department_name','')}) 可能性:{c.get('likelihood',0.5):.2f}"
+        for c in (candidates or [])[:5]
+    ) if candidates else "（无候选疾病）"
+    
+    sev = collected_data.get("severity")
+    dur = collected_data.get("onset_days")
+    hist = collected_data.get("medical_history", [])
+    extra = ""
+    if sev: extra += f"严重程度:{sev}/10 "
+    if dur is not None: extra += f"病程:{dur}天 "
+    if hist: extra += f"既往史:{'、'.join(hist)}"
+    
+    current_round = collected_data.get("current_round", 1)
+    max_rounds = collected_data.get("max_rounds", 5)
+    
+    user_prompt = (
+        f"【第{current_round}/{max_rounds}轮追问】\n"
+        f"已确认症状：{confirmed_text}\n"
+        f"已否认症状：{denied_text}\n"
+        f"已问过症状：{asked_text}\n"
+        f"当前候选疾病：\n{candidate_text}\n"
+        f"其他信息：{extra}\n\n"
+        "请决定：\n"
+        "1.如果轮数已达上限或信息足够区分TOP疾病→should_stop=true\n"
+        "2.否则，从候选疾病的关联症状中选一个最有鉴别力的新症状追问\n\n"
+        '返回JSON：\n'
+        '{"should_stop":false,"symptom_name":"症状名","question_text":"您是否有XX？","reasoning":"理由"}'
+    )
+    
+    result = await _call_with_knowledge(user_prompt, db)
+    if "error" in result:
+        return {"question": None, "should_stop": True}
+    
+    should_stop = result.get("should_stop", False)
+    if should_stop:
+        return {"question": None, "should_stop": True}
+    
+    q_name = result.get("symptom_name", "")
+    q_symptom_id = None
+    if q_name:
+        from app.models.symptom_dict import SymptomDict
+        sym = db.query(SymptomDict).filter(SymptomDict.name == q_name).first()
+        if sym:
+            q_symptom_id = sym.id
+    
+    if not q_name or q_name in asked or q_name in confirmed or q_name in denied:
+        return {"question": None, "should_stop": True}
+    
+    return {
+        "question": {
+            "symptom_id": q_symptom_id,
+            "symptom_name": q_name,
+            "question_text": result.get("question_text", f"您是否有{q_name}？"),
+            "reasoning": result.get("reasoning", ""),
+        },
+        "should_stop": False,
+    }
+
+
+async def final_recommendation(
+    all_symptoms: dict,       # {name: True/False/None}
+    candidates: list[dict],
+    collected_data: dict,
+    db,
+) -> dict:
+    """
+    综合所有症状+回答+病史+候选疾病，让 DeepSeek 给出最终推荐。
+    """
+    if not is_available():
+        return {"recommendations": [], "warnings": [], "summary": "AI不可用"}
+    
+    confirmed = [k for k, v in all_symptoms.items() if v is True]
+    denied = [k for k, v in all_symptoms.items() if v is False]
+    unknown = [k for k, v in all_symptoms.items() if v is None]
+    
+    candidate_text = "\n".join(
+        f"- {c['disease_name']}({c.get('department_name','')}) 可能性:{c.get('likelihood',0.5):.2f}"
+        for c in (candidates or [])[:5]
+    )
+    
+    sev = collected_data.get("severity")
+    dur = collected_data.get("onset_days")
+    hist = collected_data.get("medical_history", [])
+    meds = collected_data.get("current_medications", [])
+    allergies = collected_data.get("allergies", [])
+    
+    extra = ""
+    if sev: extra += f"自评严重程度:{sev}/10\n"
+    if dur is not None: extra += f"病程:{dur}天\n"
+    if hist: extra += f"既往病史:{'、'.join(hist)}\n"
+    if meds: extra += f"当前用药:{'、'.join(meds)}\n"
+    if allergies: extra += f"过敏史:{'、'.join(allergies)}\n"
+    
+    user_prompt = (
+        "请综合以下所有信息，给出最终科室推荐和疾病判断：\n\n"
+        f"【确认的症状】{'、'.join(confirmed)}\n"
+        f"【否认的症状】{'、'.join(denied)}\n"
+        f"【不确定的症状】{'、'.join(unknown)}\n"
+        f"【候选疾病】\n{candidate_text}\n"
+        f"【患者信息】\n{extra}\n"
+        "返回JSON：\n"
+        '{"recommendations":[{"department":"科室","rank":1,"disease":"最可能的疾病",'
+        '"urgency":"高/中/低","reason":"一句理由"}],'
+        '"warnings":["需要警惕的情况"],"summary":"100字以内的总结建议"}'
+    )
+    
+    result = await _call_with_knowledge(user_prompt, db)
+    if "error" in result:
+        return {"recommendations": [], "warnings": ["AI分析失败，请重新尝试"], "summary": ""}
+    
+    return {
+        "recommendations": result.get("recommendations", []),
+        "warnings": result.get("warnings", []),
+        "summary": result.get("summary", ""),
+    }
