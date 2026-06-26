@@ -14,6 +14,20 @@ SYSTEM_PROMPT = """你是一个医疗预问诊系统的AI助手。你的任务�
 2. 对候选疾病列表进行排序和评分
 请始终以JSON格式返回结果，不要添加任何解释或额外文字。"""
 
+EXTRACTION_PROMPT = """你是一个专业的医疗预问诊系统的症状提取助手。你的任务是从患者的自然语言描述中提取所有可能的症状。
+
+规则：
+1. 提取所有明确提到或强暗示的医学症状
+2. 使用标准医学术语（如"胸痛"而非"胸口不舒服"，"发热"而非"发烧"）
+3. 对描述模糊的症状，保留患者原话并标注低置信度
+4. 不要凭空编造症状
+5. 忽略非医学内容（如"我今天吃了饭"中的吃饭）
+
+返回纯JSON（不要markdown代码块，不要额外文字）：
+{"symptoms":[{"name":"症状名","confidence":0.95}],"reasoning":"提取思路简述"}
+
+其中 confidence 含义：1.0=患者明确描述，0.7-0.9=强烈暗示，0.5-0.7=可能相关，<0.5=不返回"""
+
 PROMPT_INJECTION_BLOCKLIST = [
     "ignore", "system", "override", "bypass", "指令",
     "忽略", "覆盖", "绕过", "新设定", "reset", "---",
@@ -101,9 +115,9 @@ async def rank_diseases(symptoms: list[str], candidates: list[dict], collected_d
     return await _call(user_prompt)
 
 
-async def _call(user_prompt: str) -> dict:
+async def _call(user_prompt: str, system_prompt: str | None = None) -> dict:
     messages = [
-        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "system", "content": system_prompt or SYSTEM_PROMPT},
         {"role": "user", "content": user_prompt},
     ]
     body = {
@@ -236,3 +250,106 @@ async def health_check() -> dict:
         return {"status": "ok" if "error" not in result else "degraded", "test_response": result}
     except Exception as e:
         return {"status": "error", "message": str(e)[:200]}
+
+
+async def extract_symptoms_from_text(description: str, db) -> list[dict]:
+    """
+    DeepSeek 保底症状提取 — 当 BERT + 关键词均无法有效提取症状时，
+    将患者原话直接发送给 DeepSeek 进行自然语言症状识别。
+
+    返回格式与 match_keywords/extract_bert 一致：
+    [{symptom_id, symptom_name, match_type, confidence, source}]
+    """
+    if not is_available() or not description or not description.strip():
+        return []
+
+    from app.models.symptom_dict import SymptomDict
+
+    user_prompt = f"请从以下患者描述中提取所有可能的医学症状：\n{description.strip()}"
+
+    result = await _call(user_prompt, system_prompt=EXTRACTION_PROMPT)
+    if "error" in result:
+        logger.warning("DeepSeek 症状提取失败: %s", result.get("error"))
+        return []
+
+    ds_symptoms: list[dict] = result.get("symptoms", [])
+    reasoning = result.get("reasoning", "")
+    if not ds_symptoms:
+        logger.debug("DeepSeek 未提取到症状 (reasoning=%s)", reasoning)
+        return []
+
+    logger.info("DeepSeek 症状提取保底: raw=%d symptoms, reasoning=%s",
+                 len(ds_symptoms), reasoning[:80])
+
+    # 映射 DeepSeek 症状名到 symptom_dict
+    symptoms = db.query(SymptomDict).all()
+    sym_map_by_name: dict[str, int] = {}
+    sym_map_by_alias: dict[str, int] = {}
+    for s in symptoms:
+        sym_map_by_name[s.name] = s.id
+        if s.aliases:
+            for alias in s.aliases.split(","):
+                alias = alias.strip()
+                if alias:
+                    sym_map_by_alias[alias] = s.id
+
+    results: list[dict] = []
+    seen_ids: set[int] = set()
+    for ds in ds_symptoms:
+        name = ds.get("name", "").strip()
+        confidence = float(ds.get("confidence", 0.7))
+        if not name or confidence < 0.5:
+            continue
+
+        # 1. 精确匹配症状名
+        if name in sym_map_by_name:
+            sid = sym_map_by_name[name]
+            if sid not in seen_ids:
+                seen_ids.add(sid)
+                results.append({
+                    "symptom_id": sid, "symptom_name": name,
+                    "match_type": "deepseek_exact", "confidence": min(confidence, 0.95),
+                    "source": "deepseek",
+                })
+                continue
+
+        # 2. 别名匹配
+        if name in sym_map_by_alias:
+            sid = sym_map_by_alias[name]
+            if sid not in seen_ids:
+                original_name = db.query(SymptomDict).filter(SymptomDict.id == sid).first()
+                seen_ids.add(sid)
+                results.append({
+                    "symptom_id": sid,
+                    "symptom_name": original_name.name if original_name else name,
+                    "match_type": "deepseek_alias", "confidence": min(confidence, 0.90),
+                    "source": "deepseek",
+                })
+                continue
+
+        # 3. 模糊匹配（子串或相似度）
+        matched_sid = None
+        matched_name = None
+        for sym in symptoms:
+            if sym.name in name or name in sym.name:
+                matched_sid, matched_name = sym.id, sym.name
+                break
+            if sym.aliases:
+                for alias in sym.aliases.split(","):
+                    alias = alias.strip()
+                    if alias and (alias in name or name in alias):
+                        matched_sid, matched_name = sym.id, sym.name
+                        break
+                if matched_sid:
+                    break
+
+        if matched_sid and matched_sid not in seen_ids:
+            seen_ids.add(matched_sid)
+            results.append({
+                "symptom_id": matched_sid, "symptom_name": matched_name,
+                "match_type": "deepseek_fuzzy", "confidence": min(confidence * 0.85, 0.85),
+                "source": "deepseek",
+            })
+
+    logger.info("DeepSeek 症状提取映射: %d raw → %d mapped", len(ds_symptoms), len(results))
+    return results

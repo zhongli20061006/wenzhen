@@ -115,10 +115,17 @@ async def start_consultation(req: StartConsultationRequest, current_user: dict =
             symptom_matches.extend(matches)
 
     symptom_names = list({m["symptom_name"] for m in symptom_matches})
-    logger.info("开始问诊 session=%s, patient=%s, 初始症状=%s", session_id, current_user["username"], symptom_names)
+    logger.info("开始问诊 session=%s, patient=%s, 初始症状=%s",
+                 session_id, current_user.get("username", "?"), symptom_names)
     if not symptom_names:
-        logger.warning("问诊启动失败: 未识别到有效症状, patient=%s", current_user["username"])
-        raise HTTPException(status_code=400, detail="未能识别任何有效症状")
+        # 三层提取（NER + 关键词 + DeepSeek保底）均失败
+        from app.services.deepseek_client import is_available as ds_avail
+        hint = "请用更详细的语言描述您的症状（如'头痛三天伴有发热'）"
+        if not ds_avail():
+            hint = "系统当前未启用 AI 辅助，请从症状列表手动选择，或联系管理员配置 DeepSeek API Key。" + hint
+        logger.warning("问诊启动失败: 三层提取均未识别到有效症状, patient=%s, description_len=%d",
+                        current_user.get("username", "?"), len(req.description or ""))
+        raise HTTPException(status_code=400, detail=f"未能从您的描述中识别出有效症状。{hint}")
 
     collected_data = {
         "symptoms": {name: True for name in symptom_names},
